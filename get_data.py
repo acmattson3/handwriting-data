@@ -38,14 +38,6 @@ class GetData:
     def get_writer_id(self): 
         return self.__wid
     
-    # Returns current time
-    def get_time(self):
-        now=datetime.now()
-        save_time=(now.year * 12 + now.month) * 31 + now.day
-        save_time=(save_time * 24 + now.hour) * 60 + now.minute
-        save_time=(save_time * 60 + now.second) + (now.microsecond / 1000000.0)
-        return save_time
-    
     # Generates 3D printer GCODE based on raw stroke data
     def generate_gcode(self, stroke_list, id_string, draw_wid, feedrate=2000):
         filename="autogen_"+id_string+".gcode"
@@ -56,12 +48,12 @@ class GetData:
             for i, stroke in enumerate(stroke_list):
                 f.write(f"(Starting stroke #{i+1})\n")
 
-                init_stroke_x,init_stroke_y=stroke[0]
+                init_stroke_x,init_stroke_y=stroke.p.x,stroke.p.y
 
                 f.write(f"G01 X{init_stroke_x*self.__scale_factor} Y{(draw_wid-init_stroke_y)*self.__scale_factor} Z{self.__z_lift} F{feedrate}\n")
                 f.write("G01 Z0 F500\n")
                 f.write(f"G01 F{feedrate}")
-                for x,y in stroke[1:]:
+                for x,y in stroke.p.x, stroke.p.y:
                     f.write(f"G01 X{x*self.__scale_factor} Y{(draw_wid-y)*self.__scale_factor} Z0\n")
                 f.write(f"G01 Z{self.__z_lift} F500\n\n")
 

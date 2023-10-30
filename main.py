@@ -23,30 +23,56 @@ prev_x,prev_y=0,0
 orig_x,orig_y=0,0 
 has_same_x,has_same_y=False,False
 is_paused=False
-# Holds all strokes (list of lists of tuples)
-stroke_list=[] # [ [(x,y), (x,y)], [(x,y), (x,y)] ]
-# Current continuous stroke, list of tuples
-curr_stroke=[]  # [(x,y), (x,y)]
+# Holds all strokes (list of lists of StrokeCoords)
+stroke_list=[] # [ [[(x,y), t], [(x,y), t]], [[(x,y), t], [(x,y), t]] ]
+# Current continuous stroke, list of StrokeCoord's
+curr_stroke=[]  # [ [(x,y), t], [(x,y), t]]
+
+
+### CLASSES ###
+class Coord:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+class StrokeCoord:
+    def __init__(self, x, y, t):
+        self.x=x
+        self.y=y
+        self.t=t
+
+    def __init__(self, p, t):
+        self.x=p.x
+        self.y=p.y
+        self.t=t
 
 
 ### FUNCTIONS ###
+# Returns current time
+def get_time():
+    now=datetime.now()
+    save_time=(now.year * 12 + now.month) * 31 + now.day
+    save_time=(save_time * 24 + now.hour) * 60 + now.minute
+    save_time=(save_time * 60 + now.second) + (now.microsecond / 1000000.0)
+    return save_time
+
 # Draw a line, display info, store data.
 def make_line(img, start, end, display_text=""):
     global stroke_list
     global curr_stroke
 
-    cv.line(img, (start[0], start[1]), (end[0],end[1]), (255,255,255), 2) 
+    cv.line(img, (start.x, start.y), (end.x,end.y), (255,255,255), 2) 
     if display_text:
-        print(end[0], end[1], display_text, sep='\t')
+        print(end.x, end.y, display_text, sep='\t')
     else:
-        print(end[0], end[1], sep='\t')
+        print(end.x, end.y, sep='\t')
     
-    curr_stroke.append(start)
+    curr_stroke.append(StrokeCoord(start, get_time()))
     # No end; start of next is end of current.
 
     # Store line data in memory here based on display text
     if display_text=="Up":
-        curr_stroke.append(end)
+        curr_stroke.append(StrokeCoord(end, get_time()))
         stroke_list.append(curr_stroke)
         curr_stroke=[]
 
@@ -88,12 +114,12 @@ def click_event(event, x, y, flags, params):
     if event == cv.EVENT_LBUTTONUP: 
         if has_same_x:
             has_same_x=False
-            make_line(draw_image, (prev_x, orig_y), (prev_x, prev_y))
+            make_line(draw_image, Coord(prev_x, orig_y), Coord(prev_x, prev_y))
         if has_same_y:
             has_same_y=False
-            make_line(draw_image, (orig_x, prev_y), (prev_x,prev_y)) 
+            make_line(draw_image, Coord(orig_x, prev_y), Coord(prev_x,prev_y)) 
 
-        make_line(draw_image, (x,y), (prev_x,prev_y), "Up")
+        make_line(draw_image, Coord(x,y), Coord(prev_x,prev_y), "Up")
         mouse_x,mouse_y=0,0
         orig_x,orig_y=0,0
         prev_x,prev_y=0,0
@@ -107,33 +133,33 @@ def click_event(event, x, y, flags, params):
                 if not has_same_x: # Starting a vertical line.
                     has_same_x=True
                     orig_y=mouse_y # For drawing line from start
-                    make_line(draw_image, (prev_x, prev_y), (mouse_x,mouse_y), "Started vertical!") 
+                    make_line(draw_image, Coord(prev_x, prev_y), Coord(mouse_x,mouse_y), "Started vertical!") 
                 elif has_same_x and (abs(mouse_y-orig_y)<abs(prev_y-orig_y)):
                     has_same_x=False
-                    make_line(draw_image, (prev_x,orig_y), (prev_x,prev_y), "Backtracking!") 
+                    make_line(draw_image, Coord(prev_x,orig_y), Coord(prev_x,prev_y), "Backtracking!") 
 
             else: # Not drawing a vertical line
                 if has_same_x: # If we were,
                     has_same_x=False # we aren't anymore.
-                    make_line(draw_image, (prev_x,orig_y), (prev_x,prev_y)) 
+                    make_line(draw_image, Coord(prev_x,orig_y), Coord(prev_x,prev_y)) 
             
             if mouse_y==prev_y: # We're drawing a horizontal line.
                 if not has_same_y: # Starting horizontal line
                     has_same_y=True
                     orig_x=mouse_x # For drawing horizontal line from start
-                    make_line(draw_image, (prev_x,prev_y), (mouse_x,mouse_y), "Started horizontal!")
+                    make_line(draw_image, Coord(prev_x,prev_y), Coord(mouse_x,mouse_y), "Started horizontal!")
                 elif has_same_y and (abs(mouse_x-orig_x)<abs(prev_x-orig_x)):
                     has_same_y=False
-                    make_line(draw_image, (orig_x, prev_y), (prev_x,prev_y), "Backtracking!") 
+                    make_line(draw_image, Coord(orig_x, prev_y), Coord(prev_x,prev_y), "Backtracking!") 
 
                 
             else:
                 if has_same_y:
                     has_same_y=False
-                    make_line(draw_image, (orig_x, prev_y), (prev_x,prev_y))
+                    make_line(draw_image, Coord(orig_x, prev_y), Coord(prev_x,prev_y))
 
             if not (has_same_y or has_same_x):
-                make_line(draw_image, (prev_x, prev_y), (mouse_x,mouse_y))
+                make_line(draw_image, Coord(prev_x, prev_y), Coord(mouse_x,mouse_y))
 
 
 ### MAIN ###
