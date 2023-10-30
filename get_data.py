@@ -48,13 +48,13 @@ class GetData:
             for i, stroke in enumerate(stroke_list):
                 f.write(f"(Starting stroke #{i+1})\n")
 
-                init_stroke_x,init_stroke_y=stroke.p.x,stroke.p.y
-
+                init_stroke_x,init_stroke_y=stroke[0].x,stroke[0].y
+                
                 f.write(f"G01 X{init_stroke_x*self.__scale_factor} Y{(draw_wid-init_stroke_y)*self.__scale_factor} Z{self.__z_lift} F{feedrate}\n")
                 f.write("G01 Z0 F500\n")
                 f.write(f"G01 F{feedrate}")
-                for x,y in stroke.p.x, stroke.p.y:
-                    f.write(f"G01 X{x*self.__scale_factor} Y{(draw_wid-y)*self.__scale_factor} Z0\n")
+                for p in stroke[1:]:
+                    f.write(f"G01 X{p.x*self.__scale_factor} Y{(draw_wid-p.y)*self.__scale_factor} Z0\n")
                 f.write(f"G01 Z{self.__z_lift} F500\n\n")
 
             f.write("(End GCODE)\n")
