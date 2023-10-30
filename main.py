@@ -4,6 +4,7 @@ import numpy as np # For windows
 from uuid import uuid4 # For unique form IDs
 from datetime import datetime # For timestamps
 from get_data import GetData # For data collection and processing
+from coordinates import * # For classes Coord and StrokeCoord
 
 
 ### CONSTANTS ###
@@ -27,24 +28,6 @@ is_paused=False
 stroke_list=[] # [ [[(x,y), t], [(x,y), t]], [[(x,y), t], [(x,y), t]] ]
 # Current continuous stroke, list of StrokeCoord's
 curr_stroke=[]  # [ [(x,y), t], [(x,y), t]]
-
-
-### CLASSES ###
-class Coord:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-class StrokeCoord:
-    def __init__(self, x, y, t):
-        self.x=x
-        self.y=y
-        self.t=t
-
-    def __init__(self, p, t):
-        self.x=p.x
-        self.y=p.y
-        self.t=t
 
 
 ### FUNCTIONS ###
@@ -224,7 +207,7 @@ if __name__ == "__main__":
             break
 
         elif key==13: # ENTER for next prompt
-            print("Save time:", data.get_time())
+            print("Save time:", get_time())
             
             if (curr_prompt != 0):
                 # data.store(curr_id, prompt_text, stroke_list) # Start a new file
