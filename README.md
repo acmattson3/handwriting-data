@@ -35,6 +35,7 @@ Another use, and the one I am most interested in, is using this XML format to tr
 * Fully AI-generated (including what is being written) hyper-realistic writing
 * Mass producing personalized handwritten letters (via AI or auto-fill scripts) with no need for user intervention
 * A step-by-step, fully-automated, browser-based AI writing instructor for teaching people of all ages how to write in new styles or foreign languages.
+* Training for an automatic handwriting transcription software
 
 ### Making Handwriting Data Accessible (incomplete)
 To increase its accessibility, handwriting data will be uploaded to an online database hosted on the cloud. Currently, I plan to use MongoDB's Atlas cloud database due to its intuitive API's. This will allow anyone to upload (with validation) or download handwriting data as desired. 
