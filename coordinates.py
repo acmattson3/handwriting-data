@@ -11,6 +11,9 @@ class Coord:
         self.x=0
         self.y=0
 
+    def tuplize(self):
+        return (self.x, self.y)
+
 class StrokeCoord:
     def __init__(self, x, y, t):
         self.x=x

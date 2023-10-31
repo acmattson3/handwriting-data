@@ -48,9 +48,9 @@ class GetData:
             for i, stroke in enumerate(stroke_list):
                 f.write(f"(Starting stroke #{i+1})\n")
 
-                init_stroke_x,init_stroke_y=stroke[0].x,stroke[0].y
+                first_x,first_y=stroke[0].tuplize()
                 
-                f.write(f"G01 X{init_stroke_x*self.__scale_factor} Y{(draw_wid-init_stroke_y)*self.__scale_factor} Z{self.__z_lift} F{feedrate}\n")
+                f.write(f"G01 X{first_x*self.__scale_factor} Y{(draw_wid-first_y)*self.__scale_factor} Z{self.__z_lift} F{feedrate}\n")
                 f.write("G01 Z0 F500\n")
                 f.write(f"G01 F{feedrate}")
                 for p in stroke[1:]:
