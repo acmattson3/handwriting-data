@@ -18,16 +18,16 @@ SCREEN_RES_X, SCREEN_RES_Y=1920,1080
 
 ### GLOBAL VARIABLES ###
 writing=False
-mouse_x,mouse_y=0,0
-prev_x,prev_y=0,0
+mouse=Coord(0,0)
+prev=Coord(0,0)
 # For tracking horiz/vert lines
-orig_x,orig_y=0,0 
+orig=Coord(0,0)
 has_same_x,has_same_y=False,False
 is_paused=False
 # Holds all strokes (list of lists of StrokeCoords)
-stroke_list=[] # [ [[(x,y), t], [(x,y), t]], [[(x,y), t], [(x,y), t]] ]
+stroke_list=[] # [ [S, S], [S, S] ]
 # Current continuous stroke, list of StrokeCoord's
-curr_stroke=[]  # [ [(x,y), t], [(x,y), t]]
+curr_stroke=[]  # [S, S]
 
 
 ### FUNCTIONS ###
@@ -44,7 +44,7 @@ def make_line(img, start, end, display_text=""):
     global stroke_list
     global curr_stroke
 
-    cv.line(img, (start.x, start.y), (end.x,end.y), (255,255,255), 2) 
+    cv.line(img, (start.x,start.y), (end.x,end.y), (255,255,255), 2) 
     if display_text:
         print(end.x, end.y, display_text, sep='\t')
     else:
@@ -74,11 +74,11 @@ def click_event(event, x, y, flags, params):
 
     # Required globals
     global writing
-    global mouse_x, mouse_y
-    global prev_x, prev_y
-    global orig_x, orig_y
+    global mouse, prev, orig
     global has_same_x, has_same_y
     global is_paused
+
+    now=Coord(x,y)
     
     if x < 0 or y < 0 or x > DRAW_LEN or y > DRAW_WID:
         return
@@ -88,61 +88,61 @@ def click_event(event, x, y, flags, params):
 
     if event == cv.EVENT_LBUTTONDOWN: 
         writing=True
-        if (mouse_x!=0 and mouse_y!=0):
-            prev_x,prev_y=mouse_x,mouse_y
+        if (mouse.x!=0 and mouse.y!=0):
+            prev.copy(mouse)
         else:
-            prev_x,prev_y=x,y
-        mouse_x,mouse_y=x,y
+            prev.copy(now)
+        mouse.copy(now)
 
     if event == cv.EVENT_LBUTTONUP: 
         if has_same_x:
             has_same_x=False
-            make_line(draw_image, Coord(prev_x, orig_y), Coord(prev_x, prev_y))
+            make_line(draw_image, Coord(prev.x, orig.y), prev)
         if has_same_y:
             has_same_y=False
-            make_line(draw_image, Coord(orig_x, prev_y), Coord(prev_x,prev_y)) 
+            make_line(draw_image, Coord(orig.x, prev.y), prev) 
 
-        make_line(draw_image, Coord(x,y), Coord(prev_x,prev_y), "Up")
-        mouse_x,mouse_y=0,0
-        orig_x,orig_y=0,0
-        prev_x,prev_y=0,0
+        make_line(draw_image, now, prev, "Up")
+        mouse.zero()
+        orig.zero()
+        prev.zero()
         writing=False
         
     if event == cv.EVENT_MOUSEMOVE and writing:
-        prev_x,prev_y=mouse_x,mouse_y
-        mouse_x,mouse_y=x,y
+        prev.copy(mouse)
+        mouse.copy(now)
         if writing:
-            if mouse_x==prev_x: # We're drawing a vertical line.
+            if mouse.x==prev.x: # We're drawing a vertical line.
                 if not has_same_x: # Starting a vertical line.
                     has_same_x=True
-                    orig_y=mouse_y # For drawing line from start
-                    make_line(draw_image, Coord(prev_x, prev_y), Coord(mouse_x,mouse_y), "Started vertical!") 
-                elif has_same_x and (abs(mouse_y-orig_y)<abs(prev_y-orig_y)):
+                    orig.y=mouse.y # For drawing line from start
+                    make_line(draw_image, prev, mouse, "Started vertical!") 
+                elif has_same_x and (abs(mouse.y-orig.y)<abs(prev.y-orig.y)):
                     has_same_x=False
-                    make_line(draw_image, Coord(prev_x,orig_y), Coord(prev_x,prev_y), "Backtracking!") 
+                    make_line(draw_image, Coord(prev.x,orig.y), prev, "Backtracking!") 
 
             else: # Not drawing a vertical line
                 if has_same_x: # If we were,
                     has_same_x=False # we aren't anymore.
-                    make_line(draw_image, Coord(prev_x,orig_y), Coord(prev_x,prev_y)) 
+                    make_line(draw_image, Coord(prev.x,orig.y), prev) 
             
-            if mouse_y==prev_y: # We're drawing a horizontal line.
+            if mouse.y==prev.y: # We're drawing a horizontal line.
                 if not has_same_y: # Starting horizontal line
                     has_same_y=True
-                    orig_x=mouse_x # For drawing horizontal line from start
-                    make_line(draw_image, Coord(prev_x,prev_y), Coord(mouse_x,mouse_y), "Started horizontal!")
-                elif has_same_y and (abs(mouse_x-orig_x)<abs(prev_x-orig_x)):
+                    orig.x=mouse.x # For drawing horizontal line from start
+                    make_line(draw_image, prev, mouse, "Started horizontal!")
+                elif has_same_y and (abs(mouse.x-orig.x)<abs(prev.x-orig.x)):
                     has_same_y=False
-                    make_line(draw_image, Coord(orig_x, prev_y), Coord(prev_x,prev_y), "Backtracking!") 
+                    make_line(draw_image, Coord(orig.x, prev.y), prev, "Backtracking!") 
 
                 
             else:
                 if has_same_y:
                     has_same_y=False
-                    make_line(draw_image, Coord(orig_x, prev_y), Coord(prev_x,prev_y))
+                    make_line(draw_image, Coord(orig.x, prev.y), prev)
 
             if not (has_same_y or has_same_x):
-                make_line(draw_image, Coord(prev_x, prev_y), Coord(mouse_x,mouse_y))
+                make_line(draw_image, prev, mouse)
 
 
 ### MAIN ###
