@@ -17,14 +17,14 @@ Converting the writing data to GCODE exactly copies the user's input data, milli
 * Mass-producing personalized letters (ex., handwritten invitations, thank you cards, etc.), where only a few components change from letter-to-letter (i.e., the recipient's name, which the user can write in manually).
 * Replicating a signature without need for the signer's presence (so long as the GCODE is intentionally used and validated by the signer or an authorized representative appointed by the signer).
 
-### SVG Format (in progress)
+### SVG Format (complete)
 SVG files are primarily used for graphics, and are an extremely lightweight file format. From my research, no program exists with the sole purpose of converting a hand-made drawing or handwriting into an SVG file format. With an SVG handwriting or drawing file, someone can:
 * Display that handwriting or drawing on a webpage
   * The extremely light file size allows for high webpage responsiveness.
   * Great for displaying generally hard-to-digitize information, such as complex math or drawings.
 * Create an easily-transferrable digital signature (so long as the SVG file is intentionally used and validated by the signer or an authorized representative appointed by the signer) for signing digital documents.
 
-### XML Format (incomplete)
+### XML Format (in progress)
 Storing the handwriting data in the specified XML format allows you to take your own handwriting data and turn it into data similar to that seen in the [IAM On-Line Handwriting Database](https://fki.tic.heia-fr.ch/databases/iam-on-line-handwriting-database). This data format includes the time taken for each stroke, as well as the writer's location, name, and (optionally) other user data like age or finger-length, making it highly valuable for statistical analysis and answering questions like: 
 * Does finger length correlate with writing speed? 
 * What combinations of letters take the longest to write? 

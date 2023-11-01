@@ -39,3 +39,6 @@ class StrokeCoord:
         self.x=x
         self.y=y
         self.t=t
+
+    def tuplize(self):
+        return (self.x, self.y)

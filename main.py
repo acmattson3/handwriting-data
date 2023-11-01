@@ -1,3 +1,10 @@
+''' 
+Main for handwriting-data
+Uses OpenCV to display prompts and create
+writing data through simple drawing software.
+'''
+
+
 ### INCLUDES ###
 import cv2 as cv # For windows
 import numpy as np # For windows
@@ -10,10 +17,11 @@ from coordinates import * # For classes Coord and StrokeCoord
 ### CONSTANTS ###
 PROMPTS_DIR="prompts/writing_prompts.txt"
 PIX_PER_MM=1080/195 # Pixels per mm for my screen
-#DRAW_LEN,DRAW_WID=int(235*PIX_PER_MM),int(235*PIX_PER_MM) # For drawing window == print bed
-DRAW_LEN,DRAW_WID=1200,200
+DRAW_LEN,DRAW_WID=int(186*PIX_PER_MM),int(135*PIX_PER_MM) # For drawing window == print bed
+#DRAW_LEN,DRAW_WID=1200,200
 TEXT_LEN,TEXT_WID=1000,100
 SCREEN_RES_X, SCREEN_RES_Y=1920,1080
+DRAW_COLOR = (255,255,255)
 
 
 ### GLOBAL VARIABLES ###
@@ -44,14 +52,14 @@ def make_line(img, start, end, display_text=""):
     global stroke_list
     global curr_stroke
 
-    cv.line(img, (start.x,start.y), (end.x,end.y), (255,255,255), 2) 
+    cv.line(img, (start.x,start.y), (end.x,end.y), DRAW_COLOR, 2) 
     if display_text:
         print(end.x, end.y, display_text, sep='\t')
     else:
         print(end.x, end.y, sep='\t')
     
     curr_stroke.append(StrokeCoord(start, get_time()))
-    # No end; start of next is end of current.
+    # No end; start of next line is end of current line.
 
     # Store line data in memory here based on display text
     if display_text=="Up":
@@ -115,7 +123,7 @@ def click_event(event, x, y, flags, params):
             if mouse.x==prev.x: # We're drawing a vertical line.
                 if not has_same_x: # Starting a vertical line.
                     has_same_x=True
-                    orig.y=mouse.y # For drawing line from start
+                    orig.y=mouse.y # For drawing vertical line from start
                     make_line(draw_image, prev, mouse, "Started vertical!") 
                 elif has_same_x and (abs(mouse.y-orig.y)<abs(prev.y-orig.y)):
                     has_same_x=False
@@ -135,7 +143,6 @@ def click_event(event, x, y, flags, params):
                     has_same_y=False
                     make_line(draw_image, Coord(orig.x, prev.y), prev, "Backtracking!") 
 
-                
             else:
                 if has_same_y:
                     has_same_y=False
@@ -168,7 +175,7 @@ if __name__ == "__main__":
     text_start_offset=(0, int(TEXT_WID/2))
     font_style=cv.FONT_HERSHEY_DUPLEX
     font_size=0.6
-    font_color=(255, 255, 255)
+    font_color=DRAW_COLOR
     font_thickness=1
 
     f=open(PROMPTS_DIR, "r")
@@ -194,7 +201,8 @@ if __name__ == "__main__":
                   int(SCREEN_RES_X-TEXT_LEN-50), 
                   int(SCREEN_RES_Y/2-TEXT_WID/2-400)
                   )
-    # Begin loop until prompts answered
+    
+    # Begin loop until all prompts answered
     curr_prompt=0
     curr_id=None
     while prompt_text:
@@ -216,8 +224,9 @@ if __name__ == "__main__":
             stroke_list=[]
 
             # Generate new data for current prompt
-            curr_id=uuid4()
-        
+            # # We should create an ID using the writer ID and prompt ASCII text in hash function
+            curr_id=uuid4() 
+            
             # Get new prompt
             prompt_text=f.readline()[:-1]
             curr_prompt+=1
@@ -253,13 +262,19 @@ if __name__ == "__main__":
             print(f"Generated GCODE. Filename: {filename}")
             pause_drawing()
 
-        elif key != -1:
+        elif key==115: # S to generate SVG for current draw window
+            filename=data.generate_svg(stroke_list, "current_window", DRAW_LEN, DRAW_WID)
+            print(f"Generated SVG. Filename: {filename}")
+            pause_drawing()
+
+        elif key != -1: # Unassigned key pressed
             print(f"That key, ID {key}, doesn't do anything yet.")
-            print("P\t=> Pause")
+            print("ESC\t=> Quit")
             print("ENTER\t=> Get the next prompt")
+            print("P\t=> Pause drawing window")
             print("Z\t=> Restart current prompt")
             print("G\t=> Generate GCODE from current drawing")
-            print("ESC\t=> Quit")
+            print("S\t=> Generate SVG from current drawing")
 
     cv.destroyAllWindows()
     if not prompt_text:

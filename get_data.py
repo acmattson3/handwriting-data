@@ -1,4 +1,10 @@
+'''
+get_data for handwriting-data
+Manages all data collection and processing from drawing software
+'''
+
 from datetime import datetime
+import svgwrite # For writing SVG files
 
 # Begin class GetData
 class GetData:
@@ -8,7 +14,7 @@ class GetData:
 
     __start_gcode=["G28\n",
                    f"G01 Z{__z_lift} F500\n",
-                   f"G01 X20 Y0 (avoid clip)",
+                   f"G01 X0 Y20 (avoid clip)",
                    "\n"]
     __end_gcode=["G01 Z1.5 F500\n",
                  f"G01 X10 Y{235/2} (avoid clips)",
@@ -38,7 +44,7 @@ class GetData:
     def get_writer_id(self): 
         return self.__wid
     
-    # Generates 3D printer GCODE based on raw stroke data
+    # Store the data in GCODE format (for use with CNC machine or 3D printer)
     def generate_gcode(self, stroke_list, id_string, draw_wid, feedrate=2000):
         filename="autogen_"+id_string+".gcode"
         with open(filename, "w") as f:
@@ -59,6 +65,29 @@ class GetData:
 
             f.write("(End GCODE)\n")
             f.writelines(self.__end_gcode)
+
+        return filename
+    
+    # Store the data in SVG format
+    def generate_svg(self, stroke_list, id_string, draw_len, draw_wid):
+        filename="autogen_"+id_string+".svg"
+            
+        dwg = svgwrite.Drawing(filename=filename, profile='full')
+        dwg.viewbox(width=draw_wid, height=draw_len)
+        dwg.add(dwg.rect(insert=(0, 0), size=(draw_wid, draw_len), fill='white'))
+        
+        curr_path=""
+        for stroke in stroke_list:
+            first_x,first_y=stroke[0].tuplize()
+            curr_path+=f"M{first_x},{first_y} "
+            for p in stroke[1:]:
+                curr_path+=f"L{p.x},{p.y} "
+
+        path = svgwrite.path.Path(curr_path)
+        path = path.stroke(color="black", width=2, linecap='round').fill("none")
+        dwg.add(path)
+        
+        dwg.save()
 
         return filename
 
