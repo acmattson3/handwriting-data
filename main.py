@@ -17,8 +17,7 @@ from coordinates import * # For classes Coord and StrokeCoord
 ### CONSTANTS ###
 PROMPTS_DIR="prompts/writing_prompts.txt"
 PIX_PER_MM=1080/195 # Pixels per mm for my screen
-DRAW_LEN,DRAW_WID=int(186*PIX_PER_MM),int(135*PIX_PER_MM) # For drawing window == print bed
-#DRAW_LEN,DRAW_WID=1200,200
+DRAW_LEN,DRAW_WID=1200,200
 TEXT_LEN,TEXT_WID=1000,100
 SCREEN_RES_X, SCREEN_RES_Y=1920,1080
 DRAW_COLOR = (255,255,255)
@@ -36,6 +35,8 @@ is_paused=False
 stroke_list=[] # [ [S, S], [S, S] ]
 # Current continuous stroke, list of StrokeCoord's
 curr_stroke=[]  # [S, S]
+draw_len=0
+draw_wid=0
 
 
 ### FUNCTIONS ###
@@ -85,10 +86,11 @@ def click_event(event, x, y, flags, params):
     global mouse, prev, orig
     global has_same_x, has_same_y
     global is_paused
+    global draw_wid, draw_len
 
     now=Coord(x,y)
     
-    if x < 0 or y < 0 or x > DRAW_LEN or y > DRAW_WID:
+    if x < 0 or y < 0 or x > draw_len or y > draw_wid:
         return
 
     if is_paused:
@@ -162,14 +164,30 @@ if __name__ == "__main__":
         print("invalid input. Enter 'y' or 'n'")
         use_prompts=input("Do you wish to use prompts? (y/n): ")
 
+    draw_size=DRAW_WID, DRAW_LEN, 3
     if use_prompts=='y':
         display_text=True
     else:
         display_text=False
+        print("Please specify desired draw window size.")
+        use_pixels=input("Do you wish to define size by pixels or mm? (px/mm): ")
+
+        while use_pixels!='px' and use_pixels!='mm':
+            print("invalid input. Enter 'px' or 'mm'")
+            use_pixels=input("Do you wish to define size by pixels or mm? (px/mm): ")
+
+        draw_len=0
+        draw_wid=0
+        if use_pixels=='px':
+            draw_len=int(input("Enter window length in pixels: "))
+            draw_wid=int(input("Enter window width in pixels: "))
+        else:
+            draw_len=int(int(input("Enter window length in mm: "))*PIX_PER_MM)
+            draw_wid=int(int(input("Enter window width in mm: "))*PIX_PER_MM)
+        draw_size=draw_wid, draw_len, 3
 
     # Configure drawing and text windows
     draw_window="Writing Pad"
-    draw_size=DRAW_WID, DRAW_LEN, 3
     draw_image=np.zeros(draw_size, dtype=np.uint8)
 
     # Initialize drawing and text windows
@@ -277,12 +295,12 @@ if __name__ == "__main__":
             stroke_list=[]
 
         elif key==103: # G to generate GCODE for current draw window.
-            filename=data.generate_gcode(stroke_list, "current_window", DRAW_WID)
+            filename=data.generate_gcode(stroke_list, "current_window", draw_wid)
             print(f"Generated GCODE. Filename: {filename}")
             pause_drawing()
 
         elif key==115: # S to generate SVG for current draw window
-            filename=data.generate_svg(stroke_list, "current_window", DRAW_LEN, DRAW_WID)
+            filename=data.generate_svg(stroke_list, "current_window", draw_len, draw_wid)
             print(f"Generated SVG. Filename: {filename}")
             pause_drawing()
 
