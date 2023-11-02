@@ -156,65 +156,82 @@ def click_event(event, x, y, flags, params):
 if __name__ == "__main__":
     data = GetData(collecting=True)
 
+    use_prompts=input("Do you wish to use prompts? (y/n): ")
+
+    while use_prompts!='y' and use_prompts!='n':
+        print("invalid input. Enter 'y' or 'n'")
+        use_prompts=input("Do you wish to use prompts? (y/n): ")
+
+    if use_prompts=='y':
+        display_text=True
+    else:
+        display_text=False
+
     # Configure drawing and text windows
     draw_window="Writing Pad"
-    text_window="Text Box"
     draw_size=DRAW_WID, DRAW_LEN, 3
     draw_image=np.zeros(draw_size, dtype=np.uint8)
-    text_size=TEXT_WID,TEXT_LEN,3
-    text_image=np.zeros(text_size, dtype=np.uint8)
 
     # Initialize drawing and text windows
     cv.namedWindow(draw_window)
-    cv.namedWindow(text_window)
 
     # Connect mouse event function
     cv.setMouseCallback(draw_window, click_event) 
 
-    # Font settings
-    text_start_offset=(0, int(TEXT_WID/2))
-    font_style=cv.FONT_HERSHEY_DUPLEX
-    font_size=0.6
-    font_color=DRAW_COLOR
-    font_thickness=1
-
-    f=open(PROMPTS_DIR, "r")
-    prompt_text="Click into the writing Pad and press enter to start!"
-
-    cv.putText(
-            img=text_image,
-            text=prompt_text,
-            org=text_start_offset,
-            fontFace=font_style,
-            fontScale=font_size,
-            color=font_color,
-            thickness=font_thickness
-            )
-
     cv.imshow(draw_window, draw_image)
-    cv.imshow(text_window, text_image)
     cv.moveWindow(draw_window, # Center draw window
                   int(SCREEN_RES_X-DRAW_LEN-50), 
                   int(SCREEN_RES_Y/2-DRAW_WID-50)
                   )
-    cv.moveWindow(text_window, # Center draw window
-                  int(SCREEN_RES_X-TEXT_LEN-50), 
-                  int(SCREEN_RES_Y/2-TEXT_WID/2-400)
-                  )
+
+    # Text box preparation
+    if display_text:
+        text_window="Text Box"
+        text_size=TEXT_WID,TEXT_LEN,3
+        text_image=np.zeros(text_size, dtype=np.uint8)
+        cv.namedWindow(text_window)
+        # Font settings
+        text_start_offset=(0, int(TEXT_WID/2))
+        font_style=cv.FONT_HERSHEY_DUPLEX
+        font_size=0.6
+        font_color=DRAW_COLOR
+        font_thickness=1
+
+        f=open(PROMPTS_DIR, "r")
+        prompt_text="Click into the writing Pad and press enter to start!"
+
+        cv.putText(
+                img=text_image,
+                text=prompt_text,
+                org=text_start_offset,
+                fontFace=font_style,
+                fontScale=font_size,
+                color=font_color,
+                thickness=font_thickness
+                )
+        cv.imshow(text_window, text_image)
+        cv.moveWindow(text_window, # Center draw window
+                    int(SCREEN_RES_X-TEXT_LEN-50), 
+                    int(SCREEN_RES_Y/2-TEXT_WID/2-400)
+                    )
     
     # Begin loop until all prompts answered
     curr_prompt=0
     curr_id=None
-    while prompt_text:
+    while True:
+        if display_text and not prompt_text:
+            break
+
         cv.imshow(draw_window, draw_image)
-        cv.imshow(text_window, text_image)
+        if display_text:
+            cv.imshow(text_window, text_image)
 
         key=cv.waitKey(33)
 
         if key==27: # ESC to stop
             break
 
-        elif key==13: # ENTER for next prompt
+        elif key==13 and display_text: # ENTER for next prompt
             print("Save time:", get_time())
             
             if (curr_prompt != 0):
@@ -252,9 +269,11 @@ if __name__ == "__main__":
             pause_drawing()
 
         elif key==122: # Z to restart current prompt.
-            print("Restarting prompt number", curr_prompt)
-            print("Prompt ID:", curr_id)
+            if display_text:
+                print("Restarting prompt number", curr_prompt)
+                print("Prompt ID:", curr_id)
             draw_image=np.zeros(draw_size, dtype=np.uint8)
+            print("Display cleared.")
             stroke_list=[]
 
         elif key==103: # G to generate GCODE for current draw window.
@@ -270,13 +289,14 @@ if __name__ == "__main__":
         elif key != -1: # Unassigned key pressed
             print(f"That key, ID {key}, doesn't do anything yet.")
             print("ESC\t=> Quit")
-            print("ENTER\t=> Get the next prompt")
+            if display_text:
+                print("ENTER\t=> Get the next prompt")
             print("P\t=> Pause drawing window")
             print("Z\t=> Restart current prompt")
             print("G\t=> Generate GCODE from current drawing")
             print("S\t=> Generate SVG from current drawing")
 
     cv.destroyAllWindows()
-    if not prompt_text:
+    if display_text and not prompt_text:
         input("All prompts written! Press enter to exit.")
-    f.close()
+        f.close()
