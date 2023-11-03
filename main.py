@@ -231,7 +231,7 @@ if __name__ == "__main__":
             print("Save time:", get_time())
             
             if (curr_prompt != 0):
-                # data.store(curr_id, prompt_text, stroke_list) # Start a new file
+                # data.generate_xml(curr_id, prompt_text, stroke_list) # Start a new file
                 print("Number of strokes:", len(stroke_list))
         
             stroke_list=[]

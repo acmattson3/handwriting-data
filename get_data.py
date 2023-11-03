@@ -108,5 +108,5 @@ class GetData:
 
         return filename
 
-    # Stores all form data in XML format (for handwriting-synthesis processing)
-    #def store(self, stroke_list, curr_id, ...):
+    # Store the data in XML format
+    #def generate_xml(self, stroke_list, curr_id, ...):
