@@ -1,7 +1,7 @@
-''' 
-Main for handwriting-data
-Uses OpenCV to display prompts and create
-writing data through simple drawing software.
+''' Main for handwriting-data
+* Uses OpenCV to display prompts and create
+  writing data through simple drawing software.
+* Run this file to run the data collection program.
 '''
 
 
@@ -9,19 +9,10 @@ writing data through simple drawing software.
 import cv2 as cv # For windows
 import numpy as np # For windows
 from uuid import uuid4 # For unique form IDs
-from datetime import datetime # For timestamps
 from get_data import GetData # For data collection and processing
+from get_data import get_choice, get_time
 from coordinates import * # For classes Coord and StrokeCoord
-
-
-### CONSTANTS ###
-PROMPTS_DIR="prompts/writing_prompts.txt"
-PIX_PER_MM=1080/195 # Pixels per mm for my screen
-DRAW_LEN,DRAW_WID=1200,200
-TEXT_LEN,TEXT_WID=1000,100
-SCREEN_RES_X, SCREEN_RES_Y=1920,1080
-DRAW_COLOR = (255,255,255)
-
+from config import * # Import user-dependent constants
 
 ### GLOBAL VARIABLES ###
 writing=False
@@ -35,19 +26,11 @@ is_paused=False
 stroke_list=[] # [ [S, S], [S, S] ]
 # Current continuous stroke, list of StrokeCoord's
 curr_stroke=[]  # [S, S]
-draw_len=0
-draw_wid=0
+draw_len=DRAW_LEN
+draw_wid=DRAW_WID
 
 
-### FUNCTIONS ###
-# Returns current time
-def get_time():
-    now=datetime.now()
-    save_time=(now.year * 12 + now.month) * 31 + now.day
-    save_time=(save_time * 24 + now.hour) * 60 + now.minute
-    save_time=(save_time * 60 + now.second) + (now.microsecond / 1000000.0)
-    return save_time
-
+### OPENCV DEPENDENT FUNCTIONS ###
 # Draw a line, display info, store data.
 def make_line(img, start, end, display_text=""):
     global stroke_list
@@ -156,13 +139,11 @@ def click_event(event, x, y, flags, params):
 
 ### MAIN ###
 if __name__ == "__main__":
-    data = GetData(collecting=True)
+    validate_configs() # Check that configs are set up properly
 
-    use_prompts=input("Do you wish to use prompts? (y/n): ")
+    data = GetData(True if get_choice("Do you wish to gather data?", 'y', 'n')=='y' else False)
 
-    while use_prompts!='y' and use_prompts!='n':
-        print("invalid input. Enter 'y' or 'n'")
-        use_prompts=input("Do you wish to use prompts? (y/n): ")
+    use_prompts=get_choice("Do you wish to use prompts?", 'y', 'n')
 
     draw_size=DRAW_WID, DRAW_LEN, 3
     if use_prompts=='y':
@@ -170,20 +151,22 @@ if __name__ == "__main__":
     else:
         display_text=False
         print("Please specify desired draw window size.")
-        use_pixels=input("Do you wish to define size by pixels or mm? (px/mm): ")
+        use_pixels=get_choice("Do you wish to define size by pixels or mm?", 'px', 'mm')
 
-        while use_pixels!='px' and use_pixels!='mm':
-            print("invalid input. Enter 'px' or 'mm'")
-            use_pixels=input("Do you wish to define size by pixels or mm? (px/mm): ")
+        valid_size=False
+        while not valid_size:
+            try:
+                if use_pixels=='px':
+                    draw_len=int(input("Enter window width in pixels: "))
+                    draw_wid=int(input("Enter window height in pixels: "))
+                else:
+                    draw_len=int(int(input("Enter window width in mm: "))*PIX_PER_MM)
+                    draw_wid=int(int(input("Enter window height in mm: "))*PIX_PER_MM)
 
-        draw_len=0
-        draw_wid=0
-        if use_pixels=='px':
-            draw_len=int(input("Enter window length in pixels: "))
-            draw_wid=int(input("Enter window width in pixels: "))
-        else:
-            draw_len=int(int(input("Enter window length in mm: "))*PIX_PER_MM)
-            draw_wid=int(int(input("Enter window width in mm: "))*PIX_PER_MM)
+                valid_size=True
+            except:
+                print("Invalid entry. Please enter an integer number.")
+            
         draw_size=draw_wid, draw_len, 3
 
     # Configure drawing and text windows
@@ -310,7 +293,7 @@ if __name__ == "__main__":
             if display_text:
                 print("ENTER\t=> Get the next prompt")
             print("P\t=> Pause drawing window")
-            print("Z\t=> Restart current prompt")
+            print("Z\t=> Restart current prompt/Clear display")
             print("G\t=> Generate GCODE from current drawing")
             print("S\t=> Generate SVG from current drawing")
 

@@ -1,3 +1,8 @@
+''' coordinates for handwriting-data
+* Contains classes that provide structure for
+  coordinate values gathered from drawing
+'''
+
 class Coord:
     def __init__(self, x, y):
         self.x = x

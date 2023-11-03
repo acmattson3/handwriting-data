@@ -1,12 +1,31 @@
-'''
-get_data for handwriting-data
-Manages all data collection and processing from drawing software
+''' get_data for handwriting-data
+* Manages all data collection and processing from drawing software
 '''
 
-from datetime import datetime
+from datetime import datetime # For getting current time
 import svgwrite # For writing SVG files
 
-# Begin class GetData
+### GENERAL FUNCTIONS ###
+# Gets choice, either op1 and op2, from user.
+def get_choice(query, op1, op2):
+    op_val=input(f"{query} ({op1}/{op2}): ")
+
+    while op_val!=op1 and op_val!=op2:
+        print(f"Invalid input. Enter '{op1}' or '{op2}'")
+        op_val=input(f"{query} ({op1}/{op2}): ")
+
+    return op_val
+
+# Returns the current time
+def get_time():
+    now=datetime.now()
+    save_time=(now.year * 12 + now.month) * 31 + now.day
+    save_time=(save_time * 24 + now.hour) * 60 + now.minute
+    save_time=(save_time * 60 + now.second) + (now.microsecond / 1000000.0)
+    return save_time
+
+
+### Begin class GetData ###
 class GetData:
     __z_lift=1.5
     __pix_per_mm=1080/195 # 1080 pixel tall screen, 195mm long
@@ -31,12 +50,10 @@ class GetData:
         if not self.__collecting:
             return ""
         writer_id=input("Please enter your name: ")
-        input_string="You entered: '" + writer_id + "'. Is this correct? (y/n) "
-        is_correct = input(input_string)
+        is_correct=get_choice(f"You entered: '{writer_id}'. Is this correct?", 'y', 'n')
         while is_correct != 'y':
             writer_id=input("Please enter your name: ")
-            input_string="You entered: '" + writer_id + "'. Is this correct? (y/n) "
-            is_correct = input(input_string)
+            is_correct=get_choice(f"You entered: '{writer_id}'. Is this correct?", 'y', 'n')
         
         return writer_id
 
