@@ -4,6 +4,7 @@
 
 from datetime import datetime # For getting current time
 import svgwrite # For writing SVG files
+import xml_pop # For writing XML files
 
 ### GENERAL FUNCTIONS ###
 # Gets choice, either op1 and op2, from user.
@@ -109,4 +110,5 @@ class GetData:
         return filename
 
     # Store the data in XML format
-    #def generate_xml(self, stroke_list, curr_id, ...):
+    def generate_xml(self, stroke_list, curr_id):
+        pass
