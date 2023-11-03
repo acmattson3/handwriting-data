@@ -11,8 +11,8 @@ SCREEN_RES_X,SCREEN_RES_Y=1920,1080 # The resolution of your screen (ex., 1920x1
 
 # Other settings
 PROMPTS_DIR="prompts/writing_prompts.txt" # The path to the prompts you wish to gather data on.
-DRAW_LEN,DRAW_WID=1200,200 # The size of the drawing window for prompt mode, in pixels.
-TEXT_LEN,TEXT_WID=1000,100 # The size of the prompt display window, in pixels.
+DRAW_HEIGHT,DRAW_WID=200,1200 # The size of the drawing window for prompt mode, in pixels.
+TEXT_HEIGHT,TEXT_WID=100,1000 # The size of the prompt display window, in pixels.
 DRAW_COLOR = (255,255,255) # The color of the drawings and text.
 
 # Automatically determined constants

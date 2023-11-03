@@ -26,7 +26,7 @@ is_paused=False
 stroke_list=[] # [ [S, S], [S, S] ]
 # Current continuous stroke, list of StrokeCoord's
 curr_stroke=[]  # [S, S]
-draw_len=DRAW_LEN
+draw_height=DRAW_HEIGHT
 draw_wid=DRAW_WID
 
 
@@ -69,11 +69,11 @@ def click_event(event, x, y, flags, params):
     global mouse, prev, orig
     global has_same_x, has_same_y
     global is_paused
-    global draw_wid, draw_len
+    global draw_wid, draw_height
 
     now=Coord(x,y)
     
-    if x < 0 or y < 0 or x > draw_len or y > draw_wid:
+    if x < 0 or y < 0 or x > draw_wid or y > draw_height:
         return
 
     if is_paused:
@@ -145,7 +145,7 @@ if __name__ == "__main__":
 
     use_prompts=get_choice("Do you wish to use prompts?", 'y', 'n')
 
-    draw_size=DRAW_WID, DRAW_LEN, 3
+    draw_size=DRAW_HEIGHT, DRAW_WID, 3
     if use_prompts=='y':
         display_text=True
     else:
@@ -153,21 +153,24 @@ if __name__ == "__main__":
         print("Please specify desired draw window size.")
         use_pixels=get_choice("Do you wish to define size by pixels or mm?", 'px', 'mm')
 
+        # Ensure valid window size
         valid_size=False
         while not valid_size:
             try:
                 if use_pixels=='px':
-                    draw_len=int(input("Enter window width in pixels: "))
-                    draw_wid=int(input("Enter window height in pixels: "))
+                    draw_height=int(input("Enter window height in pixels: "))
+                    draw_wid=int(input("Enter window width in pixels: "))
                 else:
-                    draw_len=int(int(input("Enter window width in mm: "))*PIX_PER_MM)
-                    draw_wid=int(int(input("Enter window height in mm: "))*PIX_PER_MM)
+                    draw_height=int(int(input("Enter window height in mm: "))*PIX_PER_MM)
+                    draw_wid=int(int(input("Enter window width in mm: "))*PIX_PER_MM)
 
+                assert draw_height>0
+                assert draw_wid>0
                 valid_size=True
             except:
-                print("Invalid entry. Please enter an integer number.")
+                print("Invalid entry. Please enter a positive integer number.")
             
-        draw_size=draw_wid, draw_len, 3
+        draw_size=draw_height, draw_wid, 3
 
     # Configure drawing and text windows
     draw_window="Writing Pad"
@@ -180,19 +183,15 @@ if __name__ == "__main__":
     cv.setMouseCallback(draw_window, click_event) 
 
     cv.imshow(draw_window, draw_image)
-    cv.moveWindow(draw_window, # Center draw window
-                  int(SCREEN_RES_X-DRAW_LEN-50), 
-                  int(SCREEN_RES_Y/2-DRAW_WID-50)
-                  )
 
     # Text box preparation
     if display_text:
         text_window="Text Box"
-        text_size=TEXT_WID,TEXT_LEN,3
+        text_size=TEXT_HEIGHT,TEXT_WID,3
         text_image=np.zeros(text_size, dtype=np.uint8)
         cv.namedWindow(text_window)
         # Font settings
-        text_start_offset=(0, int(TEXT_WID/2))
+        text_start_offset=(0, int(TEXT_HEIGHT/2))
         font_style=cv.FONT_HERSHEY_DUPLEX
         font_size=0.6
         font_color=DRAW_COLOR
@@ -211,10 +210,6 @@ if __name__ == "__main__":
                 thickness=font_thickness
                 )
         cv.imshow(text_window, text_image)
-        cv.moveWindow(text_window, # Center draw window
-                    int(SCREEN_RES_X-TEXT_LEN-50), 
-                    int(SCREEN_RES_Y/2-TEXT_WID/2-400)
-                    )
     
     # Begin loop until all prompts answered
     curr_prompt=0
@@ -278,12 +273,12 @@ if __name__ == "__main__":
             stroke_list=[]
 
         elif key==103: # G to generate GCODE for current draw window.
-            filename=data.generate_gcode(stroke_list, "current_window", draw_wid)
+            filename=data.generate_gcode(stroke_list, "current_window", draw_height)
             print(f"Generated GCODE. Filename: {filename}")
             pause_drawing()
 
         elif key==115: # S to generate SVG for current draw window
-            filename=data.generate_svg(stroke_list, "current_window", draw_len, draw_wid)
+            filename=data.generate_svg(stroke_list, "current_window", draw_wid, draw_height)
             print(f"Generated SVG. Filename: {filename}")
             pause_drawing()
 

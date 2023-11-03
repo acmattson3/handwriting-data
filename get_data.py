@@ -62,7 +62,7 @@ class GetData:
         return self.__wid
     
     # Store the data in GCODE format (for use with CNC machine or 3D printer)
-    def generate_gcode(self, stroke_list, id_string, draw_wid, feedrate=2000):
+    def generate_gcode(self, stroke_list, id_string, draw_height, feedrate=2000):
         filename="autogen_"+id_string+".gcode"
         with open(filename, "w") as f:
             f.write("(Start GCODE)\n")
@@ -73,11 +73,11 @@ class GetData:
 
                 first_x,first_y=stroke[0].tuplize()
                 
-                f.write(f"G01 X{first_x*self.__scale_factor} Y{(draw_wid-first_y)*self.__scale_factor} Z{self.__z_lift} F{feedrate}\n")
+                f.write(f"G01 X{first_x*self.__scale_factor} Y{(draw_height-first_y)*self.__scale_factor} Z{self.__z_lift} F{feedrate}\n")
                 f.write("G01 Z0 F500\n")
                 f.write(f"G01 F{feedrate}")
                 for p in stroke[1:]:
-                    f.write(f"G01 X{p.x*self.__scale_factor} Y{(draw_wid-p.y)*self.__scale_factor} Z0\n")
+                    f.write(f"G01 X{p.x*self.__scale_factor} Y{(draw_height-p.y)*self.__scale_factor} Z0\n")
                 f.write(f"G01 Z{self.__z_lift} F500\n\n")
 
             f.write("(End GCODE)\n")
@@ -86,12 +86,12 @@ class GetData:
         return filename
     
     # Store the data in SVG format
-    def generate_svg(self, stroke_list, id_string, draw_len, draw_wid):
+    def generate_svg(self, stroke_list, id_string, draw_wid, draw_height):
         filename="autogen_"+id_string+".svg"
             
         dwg = svgwrite.Drawing(filename=filename, profile='full')
-        dwg.viewbox(width=draw_wid, height=draw_len)
-        dwg.add(dwg.rect(insert=(0, 0), size=(draw_wid, draw_len), fill='white'))
+        dwg.viewbox(width=draw_wid, height=draw_height)
+        dwg.add(dwg.rect(insert=(0, 0), size=(draw_wid,draw_height), fill='white'))
         
         curr_path=""
         for stroke in stroke_list:
