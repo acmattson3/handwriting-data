@@ -22,7 +22,7 @@ prev=Coord(0,0)
 orig=Coord(0,0)
 has_same_x,has_same_y=False,False
 is_paused=False
-# Holds all strokes (list of lists of StrokeCoords)
+# Holds all strokes (list of lists of StrokeCoord's)
 stroke_list=[] # [ [S, S], [S, S] ]
 # Current continuous stroke, list of StrokeCoord's
 curr_stroke=[]  # [S, S]
@@ -36,11 +36,12 @@ def make_line(img, start, end, display_text=""):
     global stroke_list
     global curr_stroke
 
-    cv.line(img, (start.x,start.y), (end.x,end.y), DRAW_COLOR, 2) 
-    if display_text:
-        print(end.x, end.y, display_text, sep='\t')
-    else:
-        print(end.x, end.y, sep='\t')
+    cv.line(img, (start.x,start.y), (end.x,end.y), DRAW_COLOR, 2)
+    if DEBUGGING:
+        if display_text:
+            print(end.x, end.y, display_text, sep='\t')
+        else:
+            print(end.x, end.y, sep='\t')
     
     curr_stroke.append(StrokeCoord(start, get_time()))
     # No end; start of next line is end of current line.
@@ -216,15 +217,17 @@ if __name__ == "__main__":
     curr_id=None
     while True:
         if display_text and not prompt_text:
+            print(f"Empty prompt: Prompt #{curr_prompt}. Indicates end of file.")
             break
 
         cv.imshow(draw_window, draw_image)
         if display_text:
             cv.imshow(text_window, text_image)
 
-        key=cv.waitKey(33)
+        key=cv.waitKey(10)
 
         if key==27: # ESC to stop
+            print("Exiting program...")
             break
 
         elif key==13 and display_text: # ENTER for next prompt
@@ -264,7 +267,7 @@ if __name__ == "__main__":
         elif key==112: # P to pause.
             pause_drawing()
 
-        elif key==122: # Z to restart current prompt.
+        elif key==122: # Z to restart current prompt/clear display.
             if display_text:
                 print("Restarting prompt number", curr_prompt)
                 print("Prompt ID:", curr_id)
@@ -294,5 +297,5 @@ if __name__ == "__main__":
 
     cv.destroyAllWindows()
     if display_text and not prompt_text:
-        input("All prompts written! Press enter to exit.")
+        input("All prompts complete! Exiting...")
         f.close()
