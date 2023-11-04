@@ -40,7 +40,7 @@ Another use, and the one I am most interested in, is using this JSON format to t
 * A step-by-step, fully-automated, browser-based AI writing instructor for teaching people of all ages how to write in new styles or foreign languages.
 * An automatic handwriting transcription software
 
-## Accessiblility and Provisioning (in progress)
+## Accessibility and Provisioning (in progress)
 To increase its accessibility, handwriting data will be uploaded to an online database hosted on the cloud. Currently, I plan to use MongoDB's Atlas cloud database due to its intuitive API's. This will allow anyone to upload (with validation) or download handwriting data as desired. MongoDB allows data to be accessed through indexing, allowing users to retrieve exactly the data they need. 
 
 Until this point, everything has been part of the same program, as data creation and storage are part of data "gathering." This next part, data provisioning, will be a separate program that works alongside this one to take this gathered data and upload it to the database. This separate program should also allow users to download data from the database, as needed.
