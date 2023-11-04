@@ -118,10 +118,13 @@ class GetData:
         return filename
 
     # Store the data in JSON format
-    def generate_json(self, strokes_list, prompt_text, curr_id, curr_prompt):
+    def generate_json(self, strokes_list, prompt_text, curr_id, curr_prompt, extra_data):
         data={}
         data["id"]=curr_id
         data["writer_id"]=self.__wid
+        for key in extra_data:
+            val=extra_data[key]
+            data[key]=val
         data["transcription"]=prompt_text
         new_strokes_list=[[stroke.deformat() for stroke in strokes] for strokes in strokes_list]
         data["strokes"]=new_strokes_list
@@ -131,3 +134,4 @@ class GetData:
         filepath=PROMPT_DATA_DIR+filename
         with open(filepath, "w") as f:
             f.write(json_file)
+            
