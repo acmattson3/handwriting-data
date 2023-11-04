@@ -1,5 +1,5 @@
 # handwriting-data
-A way to gather, store, and retrieve handwriting data.
+A way to gather and provision handwriting data.
 
 ## Creating Data (complete)
 The data gathering portion involves a basic OpenCV drawing program used to collect pixel data of a user's pen strokes as they write. 
