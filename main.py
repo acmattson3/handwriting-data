@@ -23,9 +23,9 @@ orig=Coord(0,0)
 has_same_x,has_same_y=False,False
 is_paused=False
 # Holds all strokes (list of lists of StrokeCoord's)
-stroke_list=[] # [ [S, S], [S, S] ]
+strokes_list=[] # [ [S, S], [S, S] ]
 # Current continuous stroke, list of StrokeCoord's
-curr_stroke=[]  # [S, S]
+curr_strokes=[]  # [S, S]
 draw_height=DRAW_HEIGHT
 draw_wid=DRAW_WID
 
@@ -33,8 +33,8 @@ draw_wid=DRAW_WID
 ### OPENCV DEPENDENT FUNCTIONS ###
 # Draw a line, display info, store data.
 def make_line(img, start, end, display_text=""):
-    global stroke_list
-    global curr_stroke
+    global strokes_list
+    global curr_strokes
 
     cv.line(img, (start.x,start.y), (end.x,end.y), DRAW_COLOR, 2)
     if DEBUGGING:
@@ -43,14 +43,14 @@ def make_line(img, start, end, display_text=""):
         else:
             print(end.x, end.y, sep='\t')
     
-    curr_stroke.append(StrokeCoord(start, get_time()))
+    curr_strokes.append(StrokeCoord(start, get_time()))
     # No end; start of next line is end of current line.
 
     # Store line data in memory here based on display text
     if display_text=="Up":
-        curr_stroke.append(StrokeCoord(end, get_time()))
-        stroke_list.append(curr_stroke)
-        curr_stroke=[]
+        curr_strokes.append(StrokeCoord(end, get_time()))
+        strokes_list.append(curr_strokes)
+        curr_strokes=[]
 
 # Pause drawing window. 
 def pause_drawing():
@@ -234,18 +234,20 @@ if __name__ == "__main__":
             print("Save time:", get_time())
             
             if (curr_prompt != 0):
-                # data.generate_xml(curr_id, prompt_text, stroke_list) # Start a new file
-                print("Number of strokes:", len(stroke_list))
+                data.generate_json(strokes_list, prompt_text, curr_id, curr_prompt) # Save previous prompt data
+                if DEBUGGING:
+                    print("Number of strokes:", len(strokes_list))
         
-            stroke_list=[]
-
-            # Generate new data for current prompt
-            # # We should create an ID using the writer ID and prompt ASCII text in hash function
-            curr_id=uuid4() 
+            strokes_list=[]
             
             # Get new prompt
             prompt_text=f.readline()[:-1]
             curr_prompt+=1
+
+            # Generate new data for current prompt
+
+            # Get new ID
+            curr_id=data.get_id(prompt_text)
             
             # Clear screens
             draw_image=np.zeros(draw_size, dtype=np.uint8)
@@ -273,15 +275,15 @@ if __name__ == "__main__":
                 print("Prompt ID:", curr_id)
             draw_image=np.zeros(draw_size, dtype=np.uint8)
             print("Display cleared.")
-            stroke_list=[]
+            strokes_list=[]
 
         elif key==103: # G to generate GCODE for current draw window.
-            filename=data.generate_gcode(stroke_list, "current_window", draw_height)
+            filename=data.generate_gcode(strokes_list, "current_window", draw_height)
             print(f"Generated GCODE. Filename: {filename}")
             pause_drawing()
 
         elif key==115: # S to generate SVG for current draw window
-            filename=data.generate_svg(stroke_list, "current_window", draw_wid, draw_height)
+            filename=data.generate_svg(strokes_list, "current_window", draw_wid, draw_height)
             print(f"Generated SVG. Filename: {filename}")
             pause_drawing()
 

@@ -4,7 +4,8 @@
 
 from datetime import datetime # For getting current time
 import svgwrite # For writing SVG files
-import make_json # For writing JSON files
+import json # For writing JSON files
+from config import *
 
 ### GENERAL FUNCTIONS ###
 # Gets choice, either op1 and op2, from user.
@@ -45,6 +46,7 @@ class GetData:
     def __init__(self, collecting=True):
         self.__collecting=collecting
         self.__wid=self.__new_writer_id()
+        self.__curr_id=None
 
     # Get ID of writer
     def __new_writer_id(self):
@@ -62,14 +64,20 @@ class GetData:
     def get_writer_id(self): 
         return self.__wid
     
+    # Generates a custom hash code based on writer ID and a prompt
+    def get_id(self, prompt):
+        hashed_string=self.__wid+prompt
+        self.__curr_id=hash(hashed_string)
+        return self.__curr_id
+    
     # Store the data in GCODE format (for use with CNC machine or 3D printer)
-    def generate_gcode(self, stroke_list, id_string, draw_height, feedrate=2000):
+    def generate_gcode(self, strokes_list, id_string, draw_height, feedrate=2000):
         filename="autogen_"+id_string+".gcode"
         with open(filename, "w") as f:
             f.write("(Start GCODE)\n")
             f.writelines(self.__start_gcode)
 
-            for i, stroke in enumerate(stroke_list):
+            for i, stroke in enumerate(strokes_list):
                 f.write(f"(Starting stroke #{i+1})\n")
 
                 first_x,first_y=stroke[0].tuplize()
@@ -87,7 +95,7 @@ class GetData:
         return filename
     
     # Store the data in SVG format
-    def generate_svg(self, stroke_list, id_string, draw_wid, draw_height):
+    def generate_svg(self, strokes_list, id_string, draw_wid, draw_height):
         filename="autogen_"+id_string+".svg"
             
         dwg = svgwrite.Drawing(filename=filename, profile='full')
@@ -95,7 +103,7 @@ class GetData:
         dwg.add(dwg.rect(insert=(0, 0), size=(draw_wid,draw_height), fill='white'))
         
         curr_path=""
-        for stroke in stroke_list:
+        for stroke in strokes_list:
             first_x,first_y=stroke[0].tuplize()
             curr_path+=f"M{first_x},{first_y} "
             for p in stroke[1:]:
@@ -110,5 +118,16 @@ class GetData:
         return filename
 
     # Store the data in JSON format
-    def generate_json(self, stroke_list, curr_id):
-        pass
+    def generate_json(self, strokes_list, prompt_text, curr_id, curr_prompt):
+        data={}
+        data["id"]=curr_id
+        data["writer_id"]=self.__wid
+        data["transcription"]=prompt_text
+        new_strokes_list=[[stroke.deformat() for stroke in strokes] for strokes in strokes_list]
+        data["strokes"]=new_strokes_list
+
+        json_file=json.dumps(data, indent=4)
+        filename=self.__wid+str(curr_prompt)+".json"
+        filepath=PROMPT_DATA_DIR+filename
+        with open(filepath, "w") as f:
+            f.write(json_file)

@@ -47,3 +47,10 @@ class StrokeCoord:
 
     def tuplize(self):
         return (self.x, self.y)
+    
+    def deformat(self):
+        new_format={}
+        new_format["x"]=self.x
+        new_format["y"]=self.y
+        new_format["t"]=self.t
+        return new_format
