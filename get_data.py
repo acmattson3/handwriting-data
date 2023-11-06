@@ -38,8 +38,8 @@ class GetData:
                    f"G01 X0 Y20 (avoid clip)",
                    "\n"]
     __end_gcode=["G01 Z1.5 F500\n",
-                 f"G01 X10 Y{235/2} (avoid clips)",
-                 "G01 X10 Y235 (present page)\n"]
+                 f"G01 X0 Y{235/2} (avoid clips)",
+                 "G01 X0 Y235 (present page)\n"]
 
     # Ctor
     # Get's ID of writer, if we are collecting data.
