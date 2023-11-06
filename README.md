@@ -6,7 +6,7 @@ The data gathering portion involves a basic OpenCV drawing program used to colle
 
 The program begins by asking for the user's information, including their name and general location. The program also automatically gathers the start/end time, program version, and drawing window size. Then, the interactive writing program launches. The text window provides the user with a prompt. The user writes this prompt using a digital tablet (such as a [Gaomon Tablet](https://gaomon.net/)), writing within the drawing window. As the user writes, the program records the resulting cursor events (mouse up/down) and movement data (x/y coordinates and timing) in memory.
 
-## Storing Data (in progress)
+## Storing Data (complete)
 After the user completes a prompt or writes something custom, that data can be stored in a few different ways:
 1. A GCODE file format, given a user's screen's pixel/mm ratio (by pressing 'g' on the keyboard)
 2. An SVG file format (by pressing 's' on the keyboard)
@@ -27,7 +27,7 @@ SVG files are primarily used for graphics, and are an extremely lightweight file
 ### XML Format (DISCONTINUED)
 The XML format was found to be much more complicated than was necessary. JSON will be used instead.
 
-### JSON Format (complete, with future revisions likely)
+### JSON Format (complete)
 Storing the handwriting data in a JSON format gives a vast array of information that is easily parsable. The JSON files include the time taken for each stroke, as well as the writer's location, name, and (optionally) other user data like age or finger-length, making it highly valuable for statistical analysis and answering questions like: 
 * Does finger length correlate with writing speed? 
 * What combinations of letters take the longest to write? 
