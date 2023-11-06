@@ -6,7 +6,7 @@ RUN apt-get update -y && apt-get upgrade -y
 
 # Install git (for handwriting repo) and curl (for pip)
 RUN apt-get install git -y
-RUN apt-get install curl -y0
+RUN apt-get install curl -y
 # Make sure all are up to date
 RUN apt-get update -y
 
