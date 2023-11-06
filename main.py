@@ -150,13 +150,14 @@ if __name__ == "__main__":
     extra_data={}
     if use_prompts=='y':
         display_text=True
-        collect_extra=get_choice("Would you like to collect other user data?", 'y', 'n')
-        if collect_extra=='y':
-            while (collect_extra=='y'):
-                new_data_key=input("Please enter the data category name: ")
-                new_data_val=input(f"Please enter the value of {new_data_key}: ")
-                extra_data[new_data_key]=new_data_val
-                collect_extra=get_choice("Would you like to collect any other user data?", 'y', 'n')
+        if data.is_collecting():
+            collect_extra=get_choice("Would you like to collect other user data?", 'y', 'n')
+            if collect_extra=='y':
+                while (collect_extra=='y'):
+                    new_data_key=input("Please enter the data category name: ")
+                    new_data_val=input(f"Please enter the value of {new_data_key}: ")
+                    extra_data[new_data_key]=new_data_val
+                    collect_extra=get_choice("Would you like to collect any other user data?", 'y', 'n')
     else:
         display_text=False
         print("Please specify desired draw window size.")

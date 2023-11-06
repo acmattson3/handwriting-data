@@ -48,6 +48,9 @@ class GetData:
         self.__wid=self.__new_writer_id()
         self.__curr_id=None
 
+    def is_collecting(self):
+        return self.__collecting
+
     # Get ID of writer
     def __new_writer_id(self):
         if not self.__collecting:
@@ -119,6 +122,8 @@ class GetData:
 
     # Store the data in JSON format
     def generate_json(self, strokes_list, prompt_text, curr_id, curr_prompt, extra_data):
+        if not self.__collecting:
+            return ""
         data={}
         data["id"]=curr_id
         data["writer_id"]=self.__wid
