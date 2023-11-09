@@ -26,6 +26,19 @@ def get_time():
     save_time=(save_time * 60 + now.second) + (now.microsecond / 1000000.0)
     return save_time
 
+def gen_hash(input_string): 
+    hash_num=1
+    for char in input_string:
+        hash_num*=int(ord(char))
+
+        while hash_num>=10000000000000:
+            hash_num=int(hash_num/len(input_string))
+    
+    while hash_num < 1000000000000:
+        hash_num*=10
+
+    return hash_num
+
 
 ### Begin class GetData ###
 class GetData:
@@ -70,7 +83,7 @@ class GetData:
     # Generates a custom hash code based on writer ID and a prompt
     def get_id(self, prompt):
         hashed_string=self.__wid+prompt
-        self.__curr_id=hash(hashed_string)
+        self.__curr_id=gen_hash(hashed_string)
         return self.__curr_id
     
     # Store the data in GCODE format (for use with CNC machine or 3D printer)
@@ -131,12 +144,18 @@ class GetData:
             val=extra_data[key]
             data[key]=val
         data["transcription"]=prompt_text
-        new_strokes_list=[[stroke.deformat() for stroke in strokes] for strokes in strokes_list]
+        new_strokes_list=[[point.deformat() for point in stroke] for stroke in strokes_list]
+
         data["strokes"]=new_strokes_list
+        #save_time=strokes_list[-1][-1]['t']
+        #data["strokes"]={save_time:new_strokes_list}
 
         json_file=json.dumps(data, indent=4)
         filename=self.__wid+str(curr_prompt)+".json"
         filepath=PROMPT_DATA_DIR+filename
+        # TODO: Check if the file exists. If it does, simply
+        # update the file by appending the current stroke
+        # list like done above. 
         with open(filepath, "w") as f:
             f.write(json_file)
             
