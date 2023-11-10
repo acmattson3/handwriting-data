@@ -22,5 +22,5 @@ PIX_PER_MM=SCREEN_RES_Y/SCREEN_HEIGHT # The number of pixels per mm on your scre
 
 # Ensures that your user configs are set.
 def validate_configs():
-    assert SCREEN_HEIGHT != -1, "Please measure your screen height and put it in config.py"
+    assert SCREEN_HEIGHT > 0, "Please measure your screen height and put it in config.py"
     assert (SCREEN_RES_X,SCREEN_RES_Y) != (-1,-1), "Please enter your screen resolution in config.py"

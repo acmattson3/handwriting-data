@@ -43,8 +43,7 @@ def gen_hash(input_string):
 ### Begin class GetData ###
 class GetData:
     __z_lift=1.5
-    __pix_per_mm=1080/195 # 1080 pixel tall screen, 195mm long
-    __scale_factor=1/__pix_per_mm
+    __scale_factor=1/PIX_PER_MM
 
     __start_gcode=["G28\n",
                    f"G01 Z{__z_lift} F500\n",
@@ -140,6 +139,8 @@ class GetData:
         data={}
         data["id"]=curr_id
         data["writer_id"]=self.__wid
+        # TODO: Add human-readable date translated from save time.
+        #save_time=strokes_list[-1][-1]['t']
         for key in extra_data:
             val=extra_data[key]
             data[key]=val
@@ -147,15 +148,10 @@ class GetData:
         new_strokes_list=[[point.deformat() for point in stroke] for stroke in strokes_list]
 
         data["strokes"]=new_strokes_list
-        #save_time=strokes_list[-1][-1]['t']
-        #data["strokes"]={save_time:new_strokes_list}
 
         json_file=json.dumps(data, indent=4)
         filename=self.__wid+str(curr_prompt)+".json"
         filepath=PROMPT_DATA_DIR+filename
-        # TODO: Check if the file exists. If it does, simply
-        # update the file by appending the current stroke
-        # list like done above. 
         with open(filepath, "w") as f:
             f.write(json_file)
             

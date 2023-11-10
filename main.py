@@ -6,8 +6,8 @@
 
 
 ### INCLUDES ###
-import cv2 as cv # For windows
-import numpy as np # For windows
+import cv2 as cv # For making windows
+import numpy as np # For OpenCV
 from get_data import GetData # For data collection and processing
 from get_data import get_choice, get_time
 from coordinates import * # For classes Coord and StrokeCoord

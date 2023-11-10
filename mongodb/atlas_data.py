@@ -6,6 +6,18 @@ print("handwriting-database")
 username=input("Username: ")
 password=getpass()
 
+''' TODO:
+* See https://www.mongodb.com/docs/manual/tutorial/update-documents/ for help
+
+* Index in database based either on custom hash ID, or remove it and just index based
+  on both the writer ID and the prompt.
+
+* For repeated prompts (for analyzing how handwriting changes), just allow duplicates
+  in the database. The timestamps can be easily decoded into time/date later if 
+  that sort of data is needed.
+
+'''
+
 atlas_connection_string=f"mongodb+srv://{username}:{password}@handwriting-database.9trrkly.mongodb.net/?retryWrites=true&w=majority"
 
 try:
