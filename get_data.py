@@ -139,8 +139,15 @@ class GetData:
         data={}
         data["id"]=curr_id
         data["writer_id"]=self.__wid
-        # TODO: Add human-readable date translated from save time.
-        #save_time=strokes_list[-1][-1]['t']
+        
+        now=datetime.now()
+        data["save_date_time"]={
+            "year":int(now.year),
+            "month":int(now.month),
+            "day":int(now.day),
+            "time":str(now.hour)+":"+str(now.minute)+":"+str(now.second)+"."+str(now.microsecond)
+            }
+
         for key in extra_data:
             val=extra_data[key]
             data[key]=val
