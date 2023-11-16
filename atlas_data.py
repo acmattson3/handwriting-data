@@ -5,9 +5,7 @@ import json
 import os
 from get_data import get_choice
 from urllib.parse import quote
-
-### CONSTANTS ###
-DATA_PATH="prompts/prompt_data/"
+from config import *
 
 ### CLASS DEFINITIONS ###
 class DBHandler:
@@ -18,7 +16,7 @@ class DBHandler:
         # Deal with password
         password=str(getpass())
 
-        self.connection_string=f"mongodb+srv://{quote(self.username)}:{quote(password)}@{quote('HandwritingData')}.lbgarej.mongodb.net/?retryWrites=true&w=majority"
+        self.connection_string=f"mongodb+srv://{quote(self.username)}:{quote(password)}@{quote(DATABASE_NAME)}.lbgarej.mongodb.net/?retryWrites=true&w=majority"
         try:
             self.client=pymongo.MongoClient(self.connection_string)
         except pymongo.errors.ConfigurationError:
@@ -34,7 +32,7 @@ class DBHandler:
     def load_local_jsons(self):
         self.jsons=[]
         fnames = []
-        for dirpath, dirnames, filenames in os.walk(DATA_PATH):
+        for dirpath, dirnames, filenames in os.walk(PROMPT_DATA_DIR):
             if dirnames:
                 continue
             for filename in filenames:
