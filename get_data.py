@@ -6,7 +6,6 @@ from datetime import datetime # For getting current time
 import svgwrite # For writing SVG files
 import json # For writing JSON files
 from config import *
-from os.path import isfile
 
 ### GENERAL FUNCTIONS ###
 # Gets choice, either op1 and op2, from user.
