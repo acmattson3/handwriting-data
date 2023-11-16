@@ -6,6 +6,7 @@ from datetime import datetime # For getting current time
 import svgwrite # For writing SVG files
 import json # For writing JSON files
 from config import *
+from os.path import isfile
 
 ### GENERAL FUNCTIONS ###
 # Gets choice, either op1 and op2, from user.
@@ -157,8 +158,12 @@ class GetData:
         data["strokes"]=new_strokes_list
 
         json_file=json.dumps(data, indent=4)
-        filename=self.__wid+str(curr_prompt)+".json"
+
+        current_time=str(now.hour)+str(now.minute)+str(now.second)
+        timestamp=str(now.year)+str(now.month)+str(now.day)+'_'+current_time
+        filename=self.__wid+str(curr_prompt)+'_'+timestamp+".json"
         filepath=PROMPT_DATA_DIR+filename
+
         with open(filepath, "w") as f:
             f.write(json_file)
             
