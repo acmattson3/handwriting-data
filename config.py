@@ -6,8 +6,8 @@
 # by default, screen height is -1, and resolution is -1,-1. Please change these values.
 
 # User configured constants. Used to calculate pixels per millimeter value.
-SCREEN_HEIGHT=195 # The height of your screen, in millimeters.
-SCREEN_RES_X,SCREEN_RES_Y=1920,1080 # The resolution of your screen (ex., 1920x1080 becomes 1920,1080)
+SCREEN_HEIGHT=-1 # The height of your screen, in millimeters.
+SCREEN_RES_X,SCREEN_RES_Y=-1,-1 # The resolution of your screen (ex., 1920x1080 becomes 1920,1080)
 
 # Other settings
 PROMPTS_DIR="prompts/writing_prompts.txt" # The path to the prompts you wish to gather data on.
