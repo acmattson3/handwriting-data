@@ -143,7 +143,7 @@ if __name__ == "__main__":
 
     validate_configs() # Check that configs are set up properly
 
-    data = GetData(True if get_choice("Do you wish to gather data?", 'y', 'n')=='y' else False)
+    data=GetData(True if get_choice("Do you wish to gather data?", 'y', 'n')=='y' else False)
 
     use_prompts=get_choice("Do you wish to use prompts?", 'y', 'n')
 

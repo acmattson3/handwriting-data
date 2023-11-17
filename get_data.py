@@ -110,7 +110,7 @@ class GetData:
     def generate_svg(self, strokes_list, draw_wid, draw_height):
         filename="autogen_"+get_timestamp_string()+".svg"
             
-        dwg = svgwrite.Drawing(filename=filename, profile='full')
+        dwg=svgwrite.Drawing(filename=filename, profile='full')
         dwg.viewbox(width=draw_wid, height=draw_height)
         dwg.add(dwg.rect(insert=(0, 0), size=(draw_wid,draw_height), fill='white'))
         
@@ -121,8 +121,8 @@ class GetData:
             for p in stroke[1:]:
                 curr_path+=f"L{p.x},{p.y} "
 
-        path = svgwrite.path.Path(curr_path)
-        path = path.stroke(color="black", width=2, linecap='round').fill("none")
+        path=svgwrite.path.Path(curr_path)
+        path=path.stroke(color="black", width=2, linecap='round').fill("none")
         dwg.add(path)
         
         dwg.save()
