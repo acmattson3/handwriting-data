@@ -58,15 +58,16 @@ class DBHandler:
             for file in self.jsons:
                 self.collection.insert_one(file)
                 inserted_count+=1
+            # TODO: Test and switch to commented code below
             #result = self.collection.insert_many(self.jsons)
         # return a friendly error if the operation fails
         except pymongo.errors.OperationFailure as e:
             print("Operation error. Are you authorized to upload data?")
             print(str(e))
             return 0
-        else:
-            #inserted_count = len(result.inserted_ids)
-            print(f"Successfully uploaded {inserted_count} file{'s' if inserted_count>1 else ''}.")
+        
+        #inserted_count = len(result.inserted_ids)
+        print(f"Successfully uploaded {inserted_count} file{'s' if inserted_count>1 else ''}.")
         
         return 1
     

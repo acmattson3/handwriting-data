@@ -139,6 +139,8 @@ def click_event(event, x, y, flags, params):
 
 ### MAIN ###
 if __name__ == "__main__":
+    # TODO: Implement tkinter with program to make using much easier?
+
     validate_configs() # Check that configs are set up properly
 
     data = GetData(True if get_choice("Do you wish to gather data?", 'y', 'n')=='y' else False)
@@ -286,12 +288,12 @@ if __name__ == "__main__":
             strokes_list=[]
 
         elif key==103: # G to generate GCODE for current draw window.
-            filename=data.generate_gcode(strokes_list, "current_window", draw_height)
+            filename=data.generate_gcode(strokes_list, draw_height)
             print(f"Generated GCODE. Filename: {filename}")
             pause_drawing()
 
         elif key==115: # S to generate SVG for current draw window
-            filename=data.generate_svg(strokes_list, "current_window", draw_wid, draw_height)
+            filename=data.generate_svg(strokes_list, draw_wid, draw_height)
             print(f"Generated SVG. Filename: {filename}")
             pause_drawing()
 

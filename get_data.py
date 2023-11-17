@@ -31,27 +31,24 @@ def gen_hash(input_string):
     for char in input_string:
         hash_num*=int(ord(char))
 
-        while hash_num>=10000000000000:
+        while hash_num>=10**13:
             hash_num=int(hash_num/len(input_string))
     
-    while hash_num < 1000000000000:
+    while hash_num < 10**12:
         hash_num*=10
 
     return hash_num
 
+def get_timestamp_string(now=None):
+    if not now:
+        now=datetime.now()
+    current_time=str(now.hour).zfill(2)+str(now.minute).zfill(2)+str(now.second).zfill(2)
+    return str(now.year).zfill(4)+str(now.month).zfill(2)+str(now.day).zfill(2)+'_'+current_time
+
 
 ### Begin class GetData ###
 class GetData:
-    __z_lift=1.5
     __scale_factor=1/PIX_PER_MM
-
-    __start_gcode=["G28\n",
-                   f"G01 Z{__z_lift} F500\n",
-                   f"G01 X0 Y20 (avoid clip)",
-                   "\n"]
-    __end_gcode=["G01 Z1.5 F500\n",
-                 f"G01 X0 Y{235/2} (avoid clips)",
-                 "G01 X0 Y235 (present page)\n"]
 
     # Ctor
     # Get's ID of writer, if we are collecting data.
@@ -86,32 +83,32 @@ class GetData:
         return self.__curr_id
     
     # Store the data in GCODE format (for use with CNC machine or 3D printer)
-    def generate_gcode(self, strokes_list, id_string, draw_height, feedrate=2000):
-        filename="autogen_"+id_string+".gcode"
+    def generate_gcode(self, strokes_list, draw_height, feedrate=2000):
+        filename="autogen_"+get_timestamp_string()+".gcode"
         with open(filename, "w") as f:
             f.write("(Start GCODE)\n")
-            f.writelines(self.__start_gcode)
+            f.writelines(START_GCODE)
 
             for i, stroke in enumerate(strokes_list):
                 f.write(f"(Starting stroke #{i+1})\n")
 
                 first_x,first_y=stroke[0].tuplize()
                 
-                f.write(f"G01 X{first_x*self.__scale_factor} Y{(draw_height-first_y)*self.__scale_factor} Z{self.__z_lift} F{feedrate}\n")
+                f.write(f"G01 X{first_x*self.__scale_factor} Y{(draw_height-first_y)*self.__scale_factor} Z{Z_LIFT} F{feedrate}\n")
                 f.write("G01 Z0 F500\n")
                 f.write(f"G01 F{feedrate}")
                 for p in stroke[1:]:
                     f.write(f"G01 X{p.x*self.__scale_factor} Y{(draw_height-p.y)*self.__scale_factor} Z0\n")
-                f.write(f"G01 Z{self.__z_lift} F500\n\n")
+                f.write(f"G01 Z{Z_LIFT} F500\n\n")
 
             f.write("(End GCODE)\n")
-            f.writelines(self.__end_gcode)
+            f.writelines(END_GCODE)
 
         return filename
     
     # Store the data in SVG format
-    def generate_svg(self, strokes_list, id_string, draw_wid, draw_height):
-        filename="autogen_"+id_string+".svg"
+    def generate_svg(self, strokes_list, draw_wid, draw_height):
+        filename="autogen_"+get_timestamp_string()+".svg"
             
         dwg = svgwrite.Drawing(filename=filename, profile='full')
         dwg.viewbox(width=draw_wid, height=draw_height)
@@ -158,8 +155,7 @@ class GetData:
 
         json_file=json.dumps(data, indent=4)
 
-        current_time=str(now.hour)+str(now.minute)+str(now.second)
-        timestamp=str(now.year)+str(now.month)+str(now.day)+'_'+current_time
+        timestamp=get_timestamp_string(now)
         filename=self.__wid+str(curr_prompt)+'_'+timestamp+".json"
         filepath=PROMPT_DATA_DIR+filename
 
