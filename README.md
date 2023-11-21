@@ -41,6 +41,15 @@ Another use, and the one I am most interested in, is using this JSON format to t
 * An automatic handwriting transcription software
 
 ## Accessibility and Provisioning (in progress)
-To increase its accessibility, handwriting data will be uploaded to an online database hosted on the cloud. Currently, I plan to use MongoDB's Atlas cloud database due to its intuitive API's. This will allow anyone to upload (with validation) or download handwriting data as desired. MongoDB allows data to be accessed through indexing, allowing users to retrieve exactly the data they need. 
+To increase its accessibility, handwriting data will be uploaded to an online database hosted on the cloud. I am using MongoDB's Atlas cloud database due to its intuitive API's and premade graphical user interfaces. This will allow anyone to upload (with proper authentication) or download handwriting data as desired. MongoDB allows data to be accessed through indexing, allowing users to retrieve exactly the data they need. Until this point, everything has been part of the same program, as data creation and storage are part of data "gathering." This next part, data provisioning, will be a separate program that works alongside this one to take this gathered data and upload it to the database. 
 
-Until this point, everything has been part of the same program, as data creation and storage are part of data "gathering." This next part, data provisioning, will be a separate program that works alongside this one to take this gathered data and upload it to the database. This separate program should also allow users to download data from the database, as needed.
+**There are two recommended ways to access the handwriting data:**
+* [**MongoDB Compass**](https://www.mongodb.com/try/download/compass) - MongoDB's Compass is a program built by MongoDB with an intuitive graphical user interface.
+  * It connects to the database using a "connection string" for the database.
+  * The connection string for my database is ```mongodb+srv://<username>:<password>@HandwritingData.lbgarej.mongodb.net/```.
+* **atlas_data.py** - A terminal-based program written by yours truly.
+  * Incorporates the connection string in code so you don't have to (prompts you for a username and password on startup).
+  * Integrates seamlessly with my JSON drawing software. Upload your data in one easy step!
+  * The hard part about my program is creating some easy way for users to search for data; a GUI, like seen with Compass, is best for searching for and downloading data.
+
+**I highly recommend that anyone accessing my data use the MongoDB Compass interface for searching for and downloading data, and my program for uploading data.**
