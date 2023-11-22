@@ -55,5 +55,5 @@ To increase its accessibility, handwriting data will be uploaded to an online da
 **I highly recommend that anyone accessing my data use the MongoDB Compass interface for searching for and downloading data, and my program for uploading data.**
 
 The public, download-only, account for this data on the database is:
-Username: public
-Password: GimmeWritingData
+* **Username:** public
+* **Password:** GimmeWritingData
