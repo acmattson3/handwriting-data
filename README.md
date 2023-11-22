@@ -46,7 +46,8 @@ To increase its accessibility, handwriting data will be uploaded to an online da
 **There are two recommended ways to access the handwriting data:**
 * [**MongoDB Compass**](https://www.mongodb.com/try/download/compass) - MongoDB's Compass is a program built by MongoDB with an intuitive graphical user interface.
   * It connects to the database using a "connection string" for the database.
-  * The connection string for my database is ```mongodb+srv://<username>:<password>@HandwritingData.lbgarej.mongodb.net/```.
+  * The connection string for my database is
+    ```mongodb+srv://<username>:<password>@HandwritingData.lbgarej.mongodb.net/```.
 * **atlas_data.py** - A terminal-based program written by yours truly.
   * Incorporates the connection string in code so you don't have to (prompts you for a username and password on startup).
   * Integrates seamlessly with my JSON drawing software. Upload your data in one easy step!
