@@ -58,4 +58,5 @@ To increase its accessibility, handwriting data will be uploaded to an online da
 The public, download-only, account for this data on the database is:
 * **Username:** public
 * **Password:** GimmeWritingData
+
 So, the connection string is ```mongodb+srv://public:GimmeWritingData@HandwritingData.lbgarej.mongodb.net/```.
