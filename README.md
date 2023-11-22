@@ -53,3 +53,7 @@ To increase its accessibility, handwriting data will be uploaded to an online da
   * The hard part about my program is creating some easy way for users to search for data; a GUI, like seen with Compass, is best for searching for and downloading data.
 
 **I highly recommend that anyone accessing my data use the MongoDB Compass interface for searching for and downloading data, and my program for uploading data.**
+
+The public, download-only, account for this data on the database is:
+Username: public
+Password: GimmeWritingData
