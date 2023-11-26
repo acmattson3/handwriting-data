@@ -56,7 +56,7 @@ def fit(self):
                 val_loss = results[0]
 ```
 
-After these changes have been made, make sure to delete the contents of the checkpoints directory, and then you can successfully train the AI on your handwriting data! 
+After these changes have been made, make sure to delete the contents of the checkpoints directory, and then you can successfully train the AI on your handwriting data by running rnn.py!
 
 This solution is a little crude, but it works, and is how I trained the AI on my handwriting data. Below is an example of what happens when you give the AI too little data. This is supposed to say:
 
