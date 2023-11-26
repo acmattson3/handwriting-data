@@ -1,16 +1,16 @@
 # handwriting-data
-A way to gather and provision handwriting data.
+A way to gather and provision handwriting data, as well as some ways to use handwriting data (handwriting synthesis, copying (GCODE), and displaying (SVG))
 
 ## Creating Data (complete)
 The data gathering portion involves a basic OpenCV drawing program used to collect pixel data of a user's pen strokes as they write. 
 
-The program begins by asking for the user's information, including their name and general location. The program also automatically gathers the start/end time, program version, and drawing window size. Then, the interactive writing program launches. The text window provides the user with a prompt. The user writes this prompt using a digital tablet (such as a [Gaomon Tablet](https://gaomon.net/)), writing within the drawing window. As the user writes, the program records the resulting cursor events (mouse up/down) and movement data (x/y coordinates and timing) in memory.
+The program begins by asking for the user's name. It then asks the user how they want to use the program (prompt-mode for generating JSON data, and non-prompt-mode for generating SVG's or GCODE). Then, the interactive writing program launches. In prompt mode, the text window provides the user with a prompt. The user writes this prompt using a digital tablet (such as a [Gaomon Tablet](https://gaomon.net/)), writing within the drawing window. The program logs the writing, recording each pen stroke in the form of a JSON file. This is how the handwriting data is created. In non-prompt mode, the user can draw freely in a window of their chosen size and save that data as an SVG or GCODE file. 
 
 ## Storing Data (complete)
-After the user completes a prompt or writes something custom, that data can be stored in a few different ways:
+After the user completes a prompt (prompt-mode) or writes something custom (non-prompt-mode), that data can be stored in a few different ways (as previously stated):
 1. A GCODE file format, given a user's screen's pixel/mm ratio (by pressing 'g' on the keyboard)
 2. An SVG file format (by pressing 's' on the keyboard)
-3. A JSON file format (by pressing 'enter' on the keyboard)
+3. A JSON file format (by pressing 'enter' on the keyboard) (prompt-mode only)
 
 ### GCODE Format (complete)
 Converting the writing data to GCODE exactly copies the user's input data, millimeter by millimeter, into GCODE. This allows users with a CNC writing robot (or modified 3D printer, like me) to repeatedly and exactly copy their own or somebody else's handwriting. There are many applications for this file format, such as:
@@ -40,23 +40,24 @@ Another use, and the one I am most interested in, is using this JSON format to t
 * A step-by-step, fully-automated, browser-based AI writing instructor for teaching people of all ages how to write in new styles or foreign languages.
 * An automatic handwriting transcription software
 
-## Accessibility and Provisioning (in progress)
-To increase its accessibility, handwriting data will be uploaded to an online database hosted on the cloud. I am using MongoDB's Atlas cloud database due to its intuitive API's and premade graphical user interfaces. This will allow anyone to upload (with proper authentication) or download handwriting data as desired. MongoDB allows data to be accessed through indexing, allowing users to retrieve exactly the data they need. Until this point, everything has been part of the same program, as data creation and storage are part of data "gathering." This next part, data provisioning, will be a separate program that works alongside this one to take this gathered data and upload it to the database. 
+## Accessibility and Provisioning (complete, with future revisions/additions likely)
+To increase its accessibility, handwriting data will be uploaded to an online database hosted on the cloud. I am using MongoDB's Atlas cloud database due to its intuitive API's and premade graphical user interfaces. This will allow anyone to upload (with proper authentication) or download handwriting data as desired. MongoDB allows data to be accessed through indexing, allowing users to retrieve exactly the data they need. Until this point, everything has been part of the same program, as data creation and storage are part of data "gathering." This next part, data provisioning, is a separate program that works alongside this one to take this gathered data and upload it to the database (called atlas_data.py). There is also a program created by MongoDB called Compass that makes for an easy way to search for and download data.
 
-**There are two recommended ways to access the handwriting data:**
-* [**MongoDB Compass**](https://www.mongodb.com/try/download/compass) - MongoDB's Compass is a program built by MongoDB with an intuitive graphical user interface.
+**How to access the handwriting database:**
+* [**MongoDB Compass**](https://www.mongodb.com/try/download/compass) **for downloading** - MongoDB's Compass is a program built by MongoDB with an intuitive graphical user interface.
   * It connects to the database using a "connection string" for the database.
-  * The connection string for my database is
+  * The connection string for the handwriting database is
     ```mongodb+srv://<username>:<password>@HandwritingData.lbgarej.mongodb.net/```.
-* **atlas_data.py** - A terminal-based program written by yours truly.
+* **atlas_data.py for uploading** - A specially-written terminal-based program.
   * Incorporates the connection string in code so you don't have to (prompts you for a username and password on startup).
-  * Integrates seamlessly with my JSON drawing software. Upload your data in one easy step!
-  * The hard part about my program is creating some easy way for users to search for data; a GUI, like seen with Compass, is best for searching for and downloading data.
+  * Integrates seamlessly with the JSON drawing software to upload locally generated data in one step.
 
-**I highly recommend that anyone accessing my data use the MongoDB Compass interface for searching for and downloading data, and my program for uploading data.**
+**I highly recommend that anyone uploading locally generated data use atlas_data.py rather than MongoDB's Compass.** Downloading and searching for data is only possible through MongoDB's Compass. I did try to integrate data searching and downloading in atlas_data.py, but my results were terrible compared to the ease of use that Compass provides.
 
 The public, download-only, account for this data on the database is:
 * **Username:** public
 * **Password:** GimmeWritingData
 
 So, the connection string is ```mongodb+srv://public:GimmeWritingData@HandwritingData.lbgarej.mongodb.net/```.
+
+If you wish to upload data, please contact me.
