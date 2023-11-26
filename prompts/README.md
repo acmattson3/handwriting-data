@@ -3,13 +3,15 @@
 With the default configurations, preparing your handwriting data for synthesis is as easy as running prepare_data.py. Currently, this program disregards the writer's ID, and as such, all data will be lumped into one training set as if one writer is responsible. Assuming you fit this assumption (i.e., you wrote all of your data), you're good to go.
 
 ## Working with the data
-Once you run the file, a new directory called "processed" will appear in this directory. This new directory will contain the data you need to place in the data directory in the [handwriting synthesis AI repository](https://github.com/sjvasquez/handwriting-synthesis) that you should have cloned somewhere. The Dockerfile in this directory provides an easy way to run the handwriting synthesis AI. Run the docker image this dockerfile generates and open the container interactively and you will have a fully working handwriting-synthesis repository. As stated, the "processed" directory needs to be copied into the data directory of the handwriting synthesis AI. Do so by running the following command from within the directory this README is placed in:
+Once you run the file, a new directory called "processed" will appear in this directory. This new directory will contain the data you need to place in the data directory in the [handwriting synthesis AI repository](https://github.com/sjvasquez/handwriting-synthesis) that you should have cloned somewhere. **The Dockerfile in this directory provides an easy way to run the handwriting synthesis AI.** Run the docker image this dockerfile generates and open the container interactively and you will have a fully working handwriting-synthesis repository. As stated, the "processed" directory needs to be copied into the data directory of the handwriting synthesis AI. Do so by running the following command from within the directory this README is placed in:
 
 ```
 docker cp processed/. your_container_id:/root/handwriting-synthesis/data/processed
 ```
 
 If more detailed instructions are requested, this README file will be updated later to include them.
+
+**Another way to run the handwriting synthesis AI is using a conda environment.** Assuming you have conda installed, run ```conda create --name environment_name python=3.5.2 -c conda-forge```. Then, activate the environment with ```conda activate environment_name```. In there, you will need to use pip to install the handwriting synthesis requirements.txt file (you can clone the handwriting synthesis github repository with ```git clone https://github.com/sjvasquez/handwriting-synthesis``` first to have access to requirements.txt). Simply run ```pip install -r requirements.txt```, and after some time, your environment will be ready!
 
 ## Modifying Handwriting Synthesis
 I am currently (as of 11/14/23) struggling to get the handwriting synthesis training to work on GPU with my data, but I did successfully get it working on CPU. Two changes must be made to the source code files:
