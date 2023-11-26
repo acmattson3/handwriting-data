@@ -66,6 +66,7 @@ I'll tell you how I became the prince of a town called Bel-Air
 ```
 
 Here is what the AI came up with:
+
 ![usage_demo](https://github.com/acmattson3/handwriting-data/assets/112522139/a2a75355-0784-46aa-858c-703b41025f7f)
 
 The AI nails the general shape of my sentences, and even copies my tendency to write sentences on wavy lines. With the little data I gave it, though, it fails to reproduce the actual words. It even fails to reproduce the general length or shape of the words, let alone the letters. All this means for me is that I have more writing to do!
