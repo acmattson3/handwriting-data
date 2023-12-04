@@ -12,8 +12,6 @@ from collections import defaultdict
 import drawing
 
 
-print('Putting data together...')
-
 def get_stroke_sequence(filename):
     
     with open(filename) as f:
