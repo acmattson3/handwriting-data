@@ -14,7 +14,11 @@ for line in lines:
             all_chars[char] = 1
 
 all_used_chars = []
+keys=[]
 for key in all_chars:
+    keys.append(key)
+
+for key in sorted(keys):
     val=all_chars[key]
     print(key, ":", val)
     all_used_chars.append(key)
