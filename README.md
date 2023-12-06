@@ -2,7 +2,7 @@
 A way to gather and provision handwriting data, as well as some ways to use handwriting data (handwriting synthesis, copying (GCODE), and displaying (SVG))
 
 ## Overall Project Architecture
-Below is a diagram describing the overall project architecture.
+Below is a diagram showing the overall project architecture.
 ![image](https://github.com/acmattson3/handwriting-data/assets/112522139/45a2479d-d28f-4edd-90dd-ecdbc34d9813)
 
 
