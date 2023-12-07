@@ -143,8 +143,9 @@ if __name__ == "__main__":
 
     validate_configs() # Check that configs are set up properly
 
-    data=GetData(True if get_choice("Do you wish to gather data?", 'y', 'n')=='y' else False)
-
+    #data=GetData(True if get_choice("Do you wish to gather data?", 'y', 'n')=='y' else False)
+    data=GetData(True)
+  
     use_prompts=get_choice("Do you wish to use prompts?", 'y', 'n')
 
     draw_size=DRAW_HEIGHT, DRAW_WID, 3
