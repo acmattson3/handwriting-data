@@ -7,7 +7,7 @@ Below is a diagram showing the overall project architecture.
 
 
 ## Creating Data (complete)
-The data gathering portion involves a basic OpenCV drawing program used to collect pixel data of a user's pen strokes as they write. 
+The data gathering portion involves a basic OpenCV drawing program used to collect pixel data of a user's pen strokes as they write. To use it, launch main.py using ```python3 main.py```. 
 
 The program begins by asking for the user's name. It then asks the user how they want to use the program (prompt-mode for generating JSON data, and non-prompt-mode for generating SVG's or GCODE). Then, the interactive writing program launches. In prompt mode, the text window provides the user with a prompt. The user writes this prompt using a digital tablet (such as a [Gaomon Tablet](https://gaomon.net/)), writing within the drawing window. The program logs the writing, recording each pen stroke in the form of a JSON file. This is how the handwriting data is created. In non-prompt mode, the user can draw freely in a window of their chosen size and save that data as an SVG or GCODE file. 
 
