@@ -1,0 +1,6 @@
+matplotlib>=3.5.2
+numpy>=1.19.5
+opencv_python>=4.8.1.78
+pymongo>=4.6.0
+scipy>=1.9.1
+svgwrite>=1.4.3
