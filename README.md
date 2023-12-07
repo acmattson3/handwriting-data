@@ -1,6 +1,42 @@
 # handwriting-data
 A way to gather and provision handwriting data, as well as some ways to use handwriting data (handwriting synthesis, copying (GCODE), and displaying (SVG))
 
+## How to Use
+
+### Data Creation
+You will need Python 3 to run this project. Install it on linux using ```sudo apt-get install python3 -y```. You will also want pip; install it with ```sudo apt-get install python3-pip```
+
+Then, you will need to install the libraries required to run this project. You can do this using ```pip install -r requirements.txt```. 
+
+Before you run the drawing software, you should modify the config.py file. The first two constants are set to a value of -1 and -1,-1. Please set these values as specified in the config.py file (the height of your screen and your screen's resolution). For example, my constants in the config file look like this:
+```python3
+''' config for handwriting-data
+* Contains user dependent constants
+* Contains other configurable program settings
+'''
+
+# by default, screen height is -1, and resolution is -1,-1. Please change these values.
+
+### USER CONFIGURED CONSTANTS ###
+# Used to calculate pixels per millimeter value.
+SCREEN_HEIGHT=200 # The height of your screen, in millimeters.
+SCREEN_RES_X,SCREEN_RES_Y=1920,1080 # The resolution of your screen (ex., 1920x1080 becomes 1920,1080)
+
+...
+```
+Once you get the program running, you will be prompted to enter some user information and configurations. First, enter your desired writer ID (usually your name). You will be asked to confirm your name was received correctly.
+
+Next, specify whether you want to use prompts or not. Prompt mode generates the JSON files based on the prompt displayed for you. Non-prompt mode is used for generating SVG and GCODE files.
+
+In prompt mode, you are asked to enter any other user data you wish to collect. If you wish to enter other user data, you will be asked for a "category name" which is the key in the JSON file. You will then be asked to enter the data value for that category. You may add as much other user data as desired. 
+
+In non-prompt mode, you will be asked to specify the size of your window in either pixels or millimeters. 
+
+Once you make it through the configurations, the drawing window will open up. In prompt mode, the prompt window will open up as well. Now, you may draw in the drawing window. Press S to generate an SVG file of the your current window, G to generate GCODE based on your current window, and (in prompt mode only) ENTER to submit your current window and generate a JSON file. Press Z to clear the current window, and ESC to exit.
+
+### Data Uploading/Downloading
+To upload or download data, you will need access to the MongoDB Atlas database created for this project. The public account uses this connection string: ```mongodb+srv://public:GimmeWritingData@HandwritingData.lbgarej.mongodb.net/```. As such, the username is ```public``` and the password is ```GimmeHandwritingData```. Use MongoDB's Compass to download data using this account. To upload data, you will need authorization by a developer. You should use ```atlas_data.py``` to upload prompt data (it will ask you for an authorized username and password).
+
 ## Overall Project Architecture
 Below is a diagram showing the overall project architecture.
 ![image](https://github.com/acmattson3/handwriting-data/assets/112522139/45a2479d-d28f-4edd-90dd-ecdbc34d9813)
