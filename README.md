@@ -4,7 +4,7 @@ A way to gather and provision handwriting data, as well as some ways to use hand
 ## How to Use
 
 ### Data Creation
-You will need Python 3 to run this project. Install it on linux using ```sudo apt-get install python3 -y```. You will also want pip; install it with ```sudo apt-get install python3-pip```
+You will need Python 3 to run this project. You can install it on Linux using ```sudo apt-get install python3 -y```. You will also want pip; install it with ```sudo apt-get install python3-pip```
 
 Then, you will need to install the libraries required to run this project. You can do this using ```pip install -r requirements.txt```. 
 
