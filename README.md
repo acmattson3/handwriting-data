@@ -24,7 +24,7 @@ SCREEN_RES_X,SCREEN_RES_Y=1920,1080 # The resolution of your screen (ex., 1920x1
 
 ...
 ```
-Once you get the program running, you will be prompted to enter some user information and configurations. First, enter your desired writer ID (usually your name). You will be asked to confirm your name was received correctly.
+Then, run the program using ```python3 main.py```. Once you get the program running, you will be prompted to enter some user information and configurations. First, enter your desired writer ID (usually your name). You will be asked to confirm your name was received correctly.
 
 Next, specify whether you want to use prompts or not. Prompt mode generates the JSON files based on the prompt displayed for you. Non-prompt mode is used for generating SVG and GCODE files.
 
