@@ -1,6 +1,6 @@
 # Preparing Data
 
-**If you are using the web-based data generator (data_collection.html):**
+**If you are using the [web-based data generator](https://acmattson3.github.io/handwriting-data/) (data_collection.html):**
 
 In order to train the AI, you will need to place the data from the downloaded ZIP file into the prompt_data directory (which is located in the same location as this README). Be sure to only place the JSON files into this directory and NOT the entire ZIP file. At this point, you can run prepare_data.py and follow the steps detailed below.
 
