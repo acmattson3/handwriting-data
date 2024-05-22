@@ -1,8 +1,17 @@
 # Preparing Data
 
-With the default configurations, preparing your handwriting data for synthesis is as easy as running prepare_data.py. Currently, this program disregards the writer's ID, and as such, all data will be lumped into one training set as if one writer is responsible. Assuming you fit this assumption (i.e., you wrote all of your data), you're good to go.
+**If you are using the web-based data generator (data_collection.html):**
+
+In order to train the AI, you will need to place the data from the downloaded ZIP file into the prompt_data directory (which is located in the same location as this README). Be sure to only place the JSON files into this directory and NOT the entire ZIP file. At this point, you can run prepare_data.py and follow the steps detailed below.
+
+**If you are using the Python program (main.py):**
+
+With the default configurations, preparing your handwriting data for synthesis is as easy as running prepare_data.py. 
 
 ## Working with the data
+
+**Note:** Currently, this program disregards the writer's ID, and as such, all data will be lumped into one training set as if one writer is responsible. Assuming you fit this assumption (i.e., you wrote all of your data), you're good to go. 
+
 Once you run the file, a new directory called "processed" will appear in this directory. This new directory will contain the data you need to place in the data directory in the [handwriting synthesis AI repository](https://github.com/sjvasquez/handwriting-synthesis) that you should have cloned somewhere. **The Dockerfile in this directory provides an easy way to run the handwriting synthesis AI.** Run the docker image this dockerfile generates and open the container interactively and you will have a fully working handwriting-synthesis repository. As stated, the "processed" directory needs to be copied into the data directory of the handwriting synthesis AI. Do so by running the following command from within the directory this README is placed in:
 
 ```

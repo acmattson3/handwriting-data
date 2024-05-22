@@ -4,6 +4,11 @@ A way to gather and provision handwriting data, as well as some ways to use hand
 ## How to Use
 
 ### Data Creation
+
+There are two ways to generate handwriting data. The first (and easiest) way is by using data_collection.html. You can download this html and open it locally in a browser, or access it [here](https://acmattson3.github.io/handwriting-data/). You can then follow the instructions in [the README in the prompts directory](https://github.com/acmattson3/handwriting-data/tree/main/prompts#preparing-data). 
+
+The second way is by using the python program I have created. **If you are trying to create handwriting data for training an AI, use the html.** However, if you are trying to use any of the other features described in this repository (namely SVG/GCODE generation, or more specific handwriting data used for other purposes), use the python program.
+
 You will need Python 3 to run this project. You can install it on Linux using ```sudo apt-get install python3 -y```. You will also want pip; install it with ```sudo apt-get install python3-pip```
 
 Then, you will need to install the libraries required to run this project. You can do this using ```pip install -r requirements.txt```. 
