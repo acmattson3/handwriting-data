@@ -3,6 +3,8 @@ A way to gather and provision handwriting data, as well as some ways to use hand
 
 ## How to Use
 
+**For more information** on how I accomplished what I did and what I accomplished, check out [my website post about it](https://www.andrew-mattson.com/projects/programming/handwriting_project).
+
 ### Data Creation
 
 There are two ways to generate handwriting data. The first (and easiest) way is by using data_collection.html. You can download this html and open it locally in a browser, or access it [here](https://acmattson3.github.io/handwriting-data/). You can then follow the instructions in [the README in the prompts directory](https://github.com/acmattson3/handwriting-data/tree/main/prompts#preparing-data). 
