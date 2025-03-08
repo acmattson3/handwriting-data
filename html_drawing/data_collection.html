@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handwriting Data Collection</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            position: relative;
+        }
+        canvas {
+            border: 1px solid black;
+        }
+        #prompt {
+            margin-bottom: 20px;
+        }
+        .buttons {
+            margin-top: 20px;
+        }
+        #counter {
+            margin-top: 10px;
+        }
+        #redirectBtn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <button id="redirectBtn">Go to Homepage</button>
+    <div id="prompt">Write the prompt here</div>
+    <canvas id="drawingPad" width="800" height="400"></canvas>
+    <div class="buttons">
+        <button id="clearBtn">Clear/Restart</button>
+        <button id="submitBtn">Done/Submit</button>
+    </div>
+    <div id="counter">Completed Prompts: 0</div>
+    <button id="downloadBtn">Download Data</button>
+    
+    <script>
+        const canvas = document.getElementById('drawingPad');
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+        let strokes = [];
+        let currentStroke = [];
+        let prompts = ["Prompt 1", "Prompt 2", "Prompt 3"];
+        let currentPromptIndex = 0;
+        let completedPrompts = [];
+
+        document.getElementById('prompt').innerText = prompts[currentPromptIndex];
+        document.getElementById('counter').innerText = `Completed Prompts: ${completedPrompts.length}`;
+
+        canvas.addEventListener('mousedown', (e) => {
+            drawing = true;
+            currentStroke.push({ x: e.offsetX, y: e.offsetY, t: Date.now() });
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (!drawing) return;
+            const x = e.offsetX;
+            const y = e.offsetY;
+            const t = Date.now();
+            currentStroke.push({ x, y, t });
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            drawing = false;
+            ctx.beginPath();
+            if (currentStroke.length > 0) {
+                strokes.push(currentStroke);
+                currentStroke = [];
+            }
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            strokes = [];
+        });
+
+        document.getElementById('submitBtn').addEventListener('click', () => {
+            if (currentPromptIndex < prompts.length - 1) {
+                saveCurrentPromptData();
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                currentPromptIndex++;
+                document.getElementById('prompt').innerText = prompts[currentPromptIndex];
+                document.getElementById('counter').innerText = `Completed Prompts: ${completedPrompts.length}`;
+            } else {
+                saveCurrentPromptData();
+                alert("All prompts completed!");
+                document.getElementById('counter').innerText = `Completed Prompts: ${completedPrompts.length}`;
+            }
+        });
+
+        function saveCurrentPromptData() {
+            const data = {
+                id: Date.now(),
+                writer_id: "User",
+                save_date_time: new Date().toISOString(),
+                transcription: prompts[currentPromptIndex],
+                strokes: strokes
+            };
+            completedPrompts.push(data);
+            strokes = [];
+        }
+
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            const zip = new JSZip();
+            completedPrompts.forEach((prompt, index) => {
+                zip.file(`handwriting_${index + 1}.json`, JSON.stringify(prompt, null, 4));
+            });
+            zip.generateAsync({ type: "blob" }).then((content) => {
+                saveAs(content, "handwriting_data.zip");
+            });
+        });
+
+        document.getElementById('redirectBtn').addEventListener('click', () => {
+            window.location.href = "https://acmattson3.github.io/";
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</body>
+</html>

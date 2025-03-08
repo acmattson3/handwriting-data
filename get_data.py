@@ -6,6 +6,7 @@ from datetime import datetime # For getting current time
 import svgwrite # For writing SVG files
 import json # For writing JSON files
 from config import *
+import base64
 
 ### GENERAL FUNCTIONS ###
 # Gets choice, either op1 and op2, from user.
@@ -27,17 +28,7 @@ def get_time():
     return save_time
 
 def gen_hash(input_string): 
-    hash_num=1
-    for char in input_string:
-        hash_num*=int(ord(char))
-
-        while hash_num>=10**13:
-            hash_num=int(hash_num/len(input_string))
-    
-    while hash_num < 10**12:
-        hash_num*=10
-
-    return hash_num
+    return base64.b64encode(input_string)
 
 def get_timestamp_string(now=None):
     if not now:
@@ -83,7 +74,7 @@ class GetData:
         return self.__curr_id
     
     # Store the data in GCODE format (for use with CNC machine or 3D printer)
-    def generate_gcode(self, strokes_list, draw_height, feedrate=2000):
+    def generate_gcode(self, strokes_list, draw_height, feedrate=DEFAULT_FEED):
         filename="autogen_"+get_timestamp_string()+".gcode"
         with open(filename, "w") as f:
             f.write("(Start GCODE)\n")
@@ -96,9 +87,9 @@ class GetData:
                 
                 f.write(f"G01 X{first_x*self.__scale_factor} Y{(draw_height-first_y)*self.__scale_factor} Z{Z_LIFT} F{feedrate}\n")
                 f.write("G01 Z0 F500\n")
-                f.write(f"G01 F{feedrate}")
+                f.write(f"G01 F{feedrate}\n")
                 for p in stroke[1:]:
-                    f.write(f"G01 X{p.x*self.__scale_factor} Y{(draw_height-p.y)*self.__scale_factor} Z0\n")
+                    f.write(f"G01 X{p.x*self.__scale_factor} Y{(draw_height-p.y)*self.__scale_factor}\n")
                 f.write(f"G01 Z{Z_LIFT} F500\n\n")
 
             f.write("(End GCODE)\n")

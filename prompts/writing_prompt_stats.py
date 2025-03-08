@@ -1,5 +1,6 @@
-''' writing_prompt_stats for writing_prompts.txt
-Spits out some useful stats about your writing prompts.
+''' writing_prompt_stats
+Spits out some useful stats about your writing prompts. Can be used
+to determine how much data your model will have for each character.
 '''
 
 with open("writing_prompts.txt", "r") as f:

@@ -35,6 +35,7 @@ def get_stroke_sequence(filename):
     return offsets
 
 if __name__=="__main__":
+    print("Pulling prompt data...")
     fnames = []
     for dirpath, dirnames, filenames in os.walk('prompt_data/'):
         if dirnames:
@@ -44,6 +45,7 @@ if __name__=="__main__":
                 continue
             fnames.append(os.path.join(dirpath, filename))
 
+    print("Loading prompt data...")
     stroke_fnames, transcriptions, writer_ids=[],[],[]
     for file in fnames:
         stroke_fnames.append(file)
@@ -55,8 +57,7 @@ if __name__=="__main__":
     assert len(stroke_fnames)==len(transcriptions)==len(writer_ids), "Uneven lengths!"
     # We're good to this point
 
-    
-    print('dumping to numpy arrays...')
+    print('Dumping data into numpy arrays...')
     x = np.zeros([len(stroke_fnames), 1200, 3], dtype=np.float32)
     x_len = np.zeros([len(stroke_fnames)], dtype=np.int16)
     c = np.zeros([len(stroke_fnames), 75], dtype=np.int8)
@@ -86,3 +87,4 @@ if __name__=="__main__":
     np.save('processed/c.npy', c[valid_mask])
     np.save('processed/c_len.npy', c_len[valid_mask])
     np.save('processed/w_id.npy', w_id[valid_mask])
+    print("Data has been prepared!")

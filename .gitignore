@@ -1,0 +1,11 @@
+# Autosaved files
+autogen_*
+
+# User-specific files
+__pycache__/
+prompts/prompt_data/*
+prompts/writing_prompts_*
+config.py
+
+# Subrepositories
+handwriting-synthesis/
